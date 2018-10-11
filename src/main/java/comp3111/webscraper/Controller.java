@@ -71,6 +71,7 @@ public class Controller {
     	textAreaConsole.setText(output);
     	labelCount.setText("Hi");
     	System.out.println("You know this is lab activity...");
+    	System.out.println("testing for pull request");
     	
     }
     
