@@ -69,10 +69,12 @@ public class Controller {
     		output += item.getTitle() + "\t" + item.getPrice() + "\t" + item.getUrl() + "\n";
     	}
     	textAreaConsole.setText(output);
+ 
     	// add following line
     	labelCount.setText("Hi");
     	System.out.println("JUST FOR TESTING");
     	
+
     }
     
     /**
