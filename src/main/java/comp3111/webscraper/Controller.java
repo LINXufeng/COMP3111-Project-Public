@@ -71,6 +71,7 @@ public class Controller {
     	textAreaConsole.setText(output);
     	// add following line
     	labelCount.setText("Hi");
+    	System.out.println("JUST FOR TESTING");
     	
     }
     
