@@ -67,7 +67,12 @@ import java.util.Vector;
 public class WebScraper {
 
 	private static final String DEFAULT_URL = "https://newyork.craigslist.org/";
+	private static final int DEFAULT_PAGE_MAX = 120;
+	private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd hh:mm";
 	private WebClient client;
+	private int currentCount = -1;
+	private int itemCount = -1;
+	private int pageCount = -1;
 
 	/**
 	 * Default Constructor 
@@ -77,42 +82,90 @@ public class WebScraper {
 		client.getOptions().setCssEnabled(false);
 		client.getOptions().setJavaScriptEnabled(false);
 	}
+	
+	public int fetchResultCount(String keyword) {
+		try {
+			String searchUrl = DEFAULT_URL + "search/sss?sort=rel&query=" + URLEncoder.encode(keyword, "UTF-8");
+			HtmlPage page = client.getPage(searchUrl);
 
+			// Find the <span> that contains number of results
+			HtmlElement spanTotalCount = (HtmlElement)page.getFirstByXPath("//span[@class='totalcount']");
+			// Calculate number of pages of results
+			itemCount = spanTotalCount == null ? 0 : Integer.parseInt(spanTotalCount.asText());
+			pageCount = (int)Math.ceil(itemCount / 120.0);
+			System.out.println("Number of pages found: " + Integer.toString(pageCount));
+		} catch (Exception e) {
+			System.out.println(e);
+			return -1;
+		}
+		return pageCount;
+	}
+	
+	public boolean nextPage() {
+		currentCount += DEFAULT_PAGE_MAX;
+		if (currentCount >= itemCount) {
+			return false;
+		}
+		return true;
+	}
+	
+	public List<Item> getEmptyList() {
+		return new Vector<Item>();
+	}
+	
 	/**
 	 * The only method implemented in this class, to scrape web content from the craigslist
 	 * 
 	 * @param keyword - the keyword you want to search
 	 * @return A list of Item that has found. A zero size list is return if nothing is found. Null if any exception (e.g. no connectivity)
 	 */
+	
 	public List<Item> scrape(String keyword) {
-
+		// This function currently only work on craigslist
 		try {
+			if (pageCount == -1) {
+				fetchResultCount(keyword);
+			}
 			String searchUrl = DEFAULT_URL + "search/sss?sort=rel&query=" + URLEncoder.encode(keyword, "UTF-8");
+/*
 			HtmlPage page = client.getPage(searchUrl);
 
-			
-			List<?> items = (List<?>) page.getByXPath("//li[@class='result-row']");
-			
+			// Find the <span> that contains number of results
+			HtmlElement spanTotalCount = (HtmlElement)page.getFirstByXPath("//span[@class='totalcount']");
+			// Calculate number of pages of results
+			int pageCount = spanTotalCount == null ? 0 : (int)Math.ceil(Integer.parseInt(spanTotalCount.asText()) / 120.0);
+			System.out.println("Number of pages found: " + Integer.toString(pageCount));
+*/			
+			HtmlPage page;
+			List<?> items;			
 			Vector<Item> result = new Vector<Item>();
 
+			int currentPage = (int)Math.ceil(currentCount / 120.0);
+			System.out.println("Fetching page " + Integer.toString(currentPage + 1) + "/" + Integer.toString(pageCount) + "...");
+			page = client.getPage(searchUrl + "&s=" + Integer.toString(currentPage * 120));
+			items = (List<?>) page.getByXPath("//li[@class='result-row']");
 			for (int i = 0; i < items.size(); i++) {
 				HtmlElement htmlItem = (HtmlElement) items.get(i);
 				HtmlAnchor itemAnchor = ((HtmlAnchor) htmlItem.getFirstByXPath(".//p[@class='result-info']/a"));
 				HtmlElement spanPrice = ((HtmlElement) htmlItem.getFirstByXPath(".//a/span[@class='result-price']"));
-
+				HtmlElement postedDate = ((HtmlElement) htmlItem.getFirstByXPath(".//time[@class='result-date']"));
+				
 				// It is possible that an item doesn't have any price, we set the price to 0.0
 				// in this case
 				String itemPrice = spanPrice == null ? "0.0" : spanPrice.asText();
 
 				Item item = new Item();
 				item.setTitle(itemAnchor.asText());
-				item.setUrl(DEFAULT_URL + itemAnchor.getHrefAttribute());
+				item.setUrl(itemAnchor.getHrefAttribute());
+				
+				item.setPostedDate(postedDate.getAttribute("datetime"), DEFAULT_DATE_FORMAT);
 
 				item.setPrice(new Double(itemPrice.replace("$", "")));
 
 				result.add(item);
 			}
 			client.close();
+			System.out.println("Finished fetching, " + Integer.toString(result.size()) + " results found.");
 			return result;
 		} catch (Exception e) {
 			System.out.println(e);
