@@ -63,13 +63,21 @@ public class Controller {
     
     @FXML
     private TextArea textAreaConsole;
+  
     
+    /*
+     * @author Linus
+     * Variables for Task 4
+     */
+    // Refers to the "Go" button
     @FXML
     private Button searchBtn;
     
+    // Refers to the table in "Table" tab
     @FXML
     private TableView tableViewTable;
     
+    // Refer to each columns in the table tableViewTable
     @FXML
     private TableColumn<Item, String> tableViewTitleCol;
     @FXML
@@ -79,12 +87,17 @@ public class Controller {
     @FXML
     private TableColumn<Item, String> tableViewPostedDateCol;
     
+    // List of Item that will be visualized by the tableViewTable
+    // This will observe the following "result" List
     private ObservableList<Item> itemList;
     
+    // List of Item that store the search result
+    private List<Item> result;
+    /*
+     * End of variables for Task 4
+     */
     
     private WebScraper scraper;
-    
-    private List<Item> result;
     
     /**
      * Default controller
@@ -110,40 +123,40 @@ public class Controller {
     	
 		String keyword = textFieldKeyword.getText();
 		System.out.println("actionSearch: " + keyword);
+		// Initialize or clean the result list
 		result = scraper.getEmptyList();
+		// Attempt to search
 		try {
+			// Create a task for background searching operation
 			searchTask search = new searchTask(keyword);
+			// Bind the console to the search task
 			textAreaConsole.textProperty().bind(search.messageProperty());
+			// Disable the "Go" button when searching
 			search.setOnRunning((succeesesEvent) -> {
 				System.out.println("Searching for " + keyword);
 				searchBtn.setDisable(true);
 			});
+			// Enable the "Go" button after searching
 			search.setOnSucceeded((succeededEvent) -> {
 				tableViewTable.setItems(FXCollections.observableList(result));
 				searchBtn.setDisable(false);
 			});
 			
 			ExecutorService executor = Executors.newFixedThreadPool(1);
+			// Run the task
 			executor.execute(search);
+			// Stop the task after finishing
 			executor.shutdown();
 		} catch (Exception e) {
 			textAreaConsole.setText(e.toString());
 		}
 		
-
-		/*
-		String output = "";
-		for (Item item : result) {
-			output += item.getTitle() + "\t" + item.getPrice() + "\t" + item.getUrl() + "\n";
-		}
-		textAreaConsole.appendText(output);
-		
-	    labelCount.setText("Hi");
-	    */
+		// Assign which field of Item each columns should show
 	    tableViewTitleCol.setCellValueFactory(new PropertyValueFactory("title"));
 	    tableViewPriceCol.setCellValueFactory(new PropertyValueFactory("price"));
-	  
-	    tableViewUrlCol.setCellValueFactory(new PropertyValueFactory<Item, String>("url"));      
+	    tableViewPostedDateCol.setCellValueFactory(new PropertyValueFactory("postedDate"));	  
+	    tableViewUrlCol.setCellValueFactory(new PropertyValueFactory<Item, String>("url"));
+	    // Assign the "Open Browser when clicked" function to URL cells
 	    Callback<TableColumn<Item, String>, TableCell<Item, String>> urlCellFactory = new Callback<TableColumn<Item, String>, TableCell<Item, String>>() {
 		    @Override
 		    public TableCell call(TableColumn p) {
@@ -153,10 +166,9 @@ public class Controller {
 		    }
 	    };
 	    tableViewUrlCol.setCellFactory(urlCellFactory);
-	    tableViewPostedDateCol.setCellValueFactory(new PropertyValueFactory("postedDate"));
 	  
-	    tableViewTable.refresh();
-	    
+	    // Refresh the table
+	    tableViewTable.refresh();    
 	  }
     
     /**
@@ -167,21 +179,28 @@ public class Controller {
     	System.out.println("actionNew");
     }
     
+    /* class searchTask
+     * @author Linus
+     * Define how to search with a keyword, used for Task 3
+     */
     class searchTask extends Task<String> {
     	private final String keyword;
     	
     	public searchTask(String keyword) {
     		this.keyword = keyword;
     	}
-    	
+
     	@Override
     	protected String call() throws Exception {
     		System.out.println("Searching");
     		int currentPage = 1;
     		int totalPage = scraper.fetchResultCount(keyword);
+    		// Loop through pages until there is no pages left (scraper.nextPage() == false)
     		do {
+    			// Add Items scraped by scraper to the list
     			result.addAll(scraper.scrape(keyword));
     			String output = textAreaConsole.getText() + "Finished scraping page " + Integer.toString(currentPage) + "/" + Integer.toString(totalPage) + "...\n";
+    			// Return the message to textAreaConsole and update it
     			updateMessage(output);
     			currentPage += 1;
     		} while (scraper.nextPage());
@@ -190,10 +209,15 @@ public class Controller {
     	}
     }
     
+    /* class urlCell
+     * @author Linus
+     * Defines the behavior of cells in the URL column
+     */
     class urlCell extends TableCell<Item, String> {
     	@Override
     	public void updateItem(String item, boolean empty) {
     		super.updateItem(item, empty);
+    		// Set the text in the cell, if no URL is available, it will be blank
     		setText(empty ? null : getString());
     		setGraphic(null);
     	}
@@ -203,10 +227,15 @@ public class Controller {
     	}
     }
     
+    /* class urlCellHandler
+     * @author Linus
+     * Defines the event handler of URL cell for clicking
+     */
     class urlCellHandler implements EventHandler<MouseEvent> {
     	@Override
     	public void handle(MouseEvent t) {
     		if (Desktop.isDesktopSupported()) {
+    			// Try to open URL in browser
     			try {
 		    		TableCell c = (TableCell) t.getSource();
 		    		Desktop.getDesktop().browse(new URI(c.getItem().toString()));

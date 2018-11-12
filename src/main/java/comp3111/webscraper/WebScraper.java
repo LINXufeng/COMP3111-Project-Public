@@ -67,12 +67,23 @@ import java.util.Vector;
 public class WebScraper {
 
 	private static final String DEFAULT_URL = "https://newyork.craigslist.org/";
+	private WebClient client;
+	
+	/*
+	 * @author Linus
+	 * Extra variables for handling pagination
+	 */
 	private static final int DEFAULT_PAGE_MAX = 120;
 	private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd hh:mm";
-	private WebClient client;
+	// currentCount tells the index of first item of current page
 	private int currentCount = -1;
+	// itemCount tells the total number of results
 	private int itemCount = -1;
+	// pageCount tells the total number of pages
 	private int pageCount = -1;
+	/*
+	 * End of extra variables for handling pagination
+	 */
 
 	/**
 	 * Default Constructor 
@@ -83,6 +94,11 @@ public class WebScraper {
 		client.getOptions().setJavaScriptEnabled(false);
 	}
 	
+	/* method fetchResultCount
+	 * @author Linus
+	 * This function will return the number of pages of search results using the keyword provided
+	 * Currently only works on the DEFAULT page (Craigslist)¡@
+	 */
 	public int fetchResultCount(String keyword) {
 		try {
 			String searchUrl = DEFAULT_URL + "search/sss?sort=rel&query=" + URLEncoder.encode(keyword, "UTF-8");
@@ -100,7 +116,16 @@ public class WebScraper {
 		}
 		return pageCount;
 	}
+	/*
+	 * End of method fetchResultCount
+	 */
 	
+	/* method nextPage
+	 * @author Linus
+	 * Add the currentCount by max number of items per page
+	 * return true if another page should exists
+	 * return false if no more pages
+	 */
 	public boolean nextPage() {
 		currentCount += DEFAULT_PAGE_MAX;
 		if (currentCount >= itemCount) {
@@ -108,10 +133,21 @@ public class WebScraper {
 		}
 		return true;
 	}
+	/*
+	 * End of method nextPage
+	 */
 	
+	/* method getEmptyList
+	 * @author Linus
+	 * Just an helper function to help instantiating an empty list in the correct list type
+	 * Which by default is Vector
+	 */
 	public List<Item> getEmptyList() {
 		return new Vector<Item>();
 	}
+	/*
+	 * End of method getEmptyList
+	 */
 	
 	/**
 	 * The only method implemented in this class, to scrape web content from the craigslist
@@ -119,35 +155,32 @@ public class WebScraper {
 	 * @param keyword - the keyword you want to search
 	 * @return A list of Item that has found. A zero size list is return if nothing is found. Null if any exception (e.g. no connectivity)
 	 */
-	
+	/*
+	 * Heavily modified to return results on the current page only based on the current item count variables defined above
+	 */
 	public List<Item> scrape(String keyword) {
-		// This function currently only work on craigslist
+		// This function currently only work on Craigslist
 		try {
 			if (pageCount == -1) {
 				fetchResultCount(keyword);
 			}
 			String searchUrl = DEFAULT_URL + "search/sss?sort=rel&query=" + URLEncoder.encode(keyword, "UTF-8");
-/*
-			HtmlPage page = client.getPage(searchUrl);
-
-			// Find the <span> that contains number of results
-			HtmlElement spanTotalCount = (HtmlElement)page.getFirstByXPath("//span[@class='totalcount']");
-			// Calculate number of pages of results
-			int pageCount = spanTotalCount == null ? 0 : (int)Math.ceil(Integer.parseInt(spanTotalCount.asText()) / 120.0);
-			System.out.println("Number of pages found: " + Integer.toString(pageCount));
-*/			
+	
 			HtmlPage page;
 			List<?> items;			
 			Vector<Item> result = new Vector<Item>();
 
+			// 120 is the max amount of items shown in Craigslist page
 			int currentPage = (int)Math.ceil(currentCount / 120.0);
-			//System.out.println("Fetching page " + Integer.toString(currentPage + 1) + "/" + Integer.toString(pageCount) + "...");
 			page = client.getPage(searchUrl + "&s=" + Integer.toString(currentPage * 120));
 			items = (List<?>) page.getByXPath("//li[@class='result-row']");
+			// Loop through each grids, based on skeleton code
 			for (int i = 0; i < items.size(); i++) {
 				HtmlElement htmlItem = (HtmlElement) items.get(i);
 				HtmlAnchor itemAnchor = ((HtmlAnchor) htmlItem.getFirstByXPath(".//p[@class='result-info']/a"));
+				// spanPrice will fetch the <span class='result-price'> element in that grid
 				HtmlElement spanPrice = ((HtmlElement) htmlItem.getFirstByXPath(".//a/span[@class='result-price']"));
+				// postedDate will fetch the <time class='result-date'> element in that grid
 				HtmlElement postedDate = ((HtmlElement) htmlItem.getFirstByXPath(".//time[@class='result-date']"));
 				
 				// It is possible that an item doesn't have any price, we set the price to 0.0
@@ -158,14 +191,15 @@ public class WebScraper {
 				item.setTitle(itemAnchor.asText());
 				item.setUrl(itemAnchor.getHrefAttribute());
 				
+				// Parse the posted date using the date format defined above
 				item.setPostedDate(postedDate.getAttribute("datetime"), DEFAULT_DATE_FORMAT);
 
+				// Set the price to the item object
 				item.setPrice(new Double(itemPrice.replace("$", "")));
 
 				result.add(item);
 			}
 			client.close();
-			//System.out.println("Finished fetching, " + Integer.toString(result.size()) + " results found.");
 			return result;
 		} catch (Exception e) {
 			System.out.println(e);
