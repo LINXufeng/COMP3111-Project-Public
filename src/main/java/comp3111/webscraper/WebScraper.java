@@ -93,9 +93,9 @@ public class WebScraper {
 			// Calculate number of pages of results
 			itemCount = spanTotalCount == null ? 0 : Integer.parseInt(spanTotalCount.asText());
 			pageCount = (int)Math.ceil(itemCount / 120.0);
-			System.out.println("Number of pages found: " + Integer.toString(pageCount));
+			//System.out.println("Number of pages found: " + Integer.toString(pageCount));
 		} catch (Exception e) {
-			System.out.println(e);
+			//System.out.println(e);
 			return -1;
 		}
 		return pageCount;
@@ -141,7 +141,7 @@ public class WebScraper {
 			Vector<Item> result = new Vector<Item>();
 
 			int currentPage = (int)Math.ceil(currentCount / 120.0);
-			System.out.println("Fetching page " + Integer.toString(currentPage + 1) + "/" + Integer.toString(pageCount) + "...");
+			//System.out.println("Fetching page " + Integer.toString(currentPage + 1) + "/" + Integer.toString(pageCount) + "...");
 			page = client.getPage(searchUrl + "&s=" + Integer.toString(currentPage * 120));
 			items = (List<?>) page.getByXPath("//li[@class='result-row']");
 			for (int i = 0; i < items.size(); i++) {
@@ -165,7 +165,7 @@ public class WebScraper {
 				result.add(item);
 			}
 			client.close();
-			System.out.println("Finished fetching, " + Integer.toString(result.size()) + " results found.");
+			//System.out.println("Finished fetching, " + Integer.toString(result.size()) + " results found.");
 			return result;
 		} catch (Exception e) {
 			System.out.println(e);

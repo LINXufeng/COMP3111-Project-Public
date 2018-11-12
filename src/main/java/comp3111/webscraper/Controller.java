@@ -12,16 +12,26 @@ import javafx.scene.control.Hyperlink;
 
 import java.util.List;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.scene.control.Button;
+
+
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.ObservableList;
+
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
+
 import java.awt.Desktop;
 import java.net.URI;
 
@@ -55,6 +65,9 @@ public class Controller {
     private TextArea textAreaConsole;
     
     @FXML
+    private Button searchBtn;
+    
+    @FXML
     private TableView tableViewTable;
     
     @FXML
@@ -68,13 +81,17 @@ public class Controller {
     
     private ObservableList<Item> itemList;
     
+    
     private WebScraper scraper;
+    
+    private List<Item> result;
     
     /**
      * Default controller
      */
     public Controller() {
     	scraper = new WebScraper();
+    	result = scraper.getEmptyList();
     }
 
     /**
@@ -82,7 +99,7 @@ public class Controller {
      */
     @FXML
     private void initialize() {
-    	
+
     }
     
     /**
@@ -90,33 +107,57 @@ public class Controller {
      */
     @FXML
     private void actionSearch() {
-    	System.out.println("actionSearch: " + textFieldKeyword.getText());
-    	List<Item> result = scraper.scrape(textFieldKeyword.getText());
-        tableViewTable.setItems(FXCollections.observableList(result));
-    	String output = "";
-    	for (Item item : result) {
-    		output += item.getTitle() + "\t" + item.getPrice() + "\t" + item.getUrl() + "\n";
-    	}
-    	textAreaConsole.setText(output);
-      labelCount.setText("Hi");
-      
-      tableViewTitleCol.setCellValueFactory(new PropertyValueFactory("title"));
-      tableViewPriceCol.setCellValueFactory(new PropertyValueFactory("price"));
-      
-      tableViewUrlCol.setCellValueFactory(new PropertyValueFactory<Item, String>("url"));      
-      Callback<TableColumn<Item, String>, TableCell<Item, String>> urlCellFactory = new Callback<TableColumn<Item, String>, TableCell<Item, String>>() {
-    	  @Override
-    	  public TableCell call(TableColumn p) {
-    		  urlCell c = new urlCell();
-    		  c.addEventHandler(MouseEvent.MOUSE_CLICKED, new urlCellHandler());
-    		  return c;
-    	  }
-      };
-      tableViewUrlCol.setCellFactory(urlCellFactory);
-      tableViewPostedDateCol.setCellValueFactory(new PropertyValueFactory("postedDate"));
-      
-      tableViewTable.refresh();
-    }
+    	
+		String keyword = textFieldKeyword.getText();
+		System.out.println("actionSearch: " + keyword);
+		result = scraper.getEmptyList();
+		try {
+			searchTask search = new searchTask(keyword);
+			textAreaConsole.textProperty().bind(search.messageProperty());
+			search.setOnRunning((succeesesEvent) -> {
+				System.out.println("Searching for " + keyword);
+				searchBtn.setDisable(true);
+			});
+			search.setOnSucceeded((succeededEvent) -> {
+				tableViewTable.setItems(FXCollections.observableList(result));
+				searchBtn.setDisable(false);
+			});
+			
+			ExecutorService executor = Executors.newFixedThreadPool(1);
+			executor.execute(search);
+			executor.shutdown();
+		} catch (Exception e) {
+			textAreaConsole.setText(e.toString());
+		}
+		
+
+		/*
+		String output = "";
+		for (Item item : result) {
+			output += item.getTitle() + "\t" + item.getPrice() + "\t" + item.getUrl() + "\n";
+		}
+		textAreaConsole.appendText(output);
+		
+	    labelCount.setText("Hi");
+	    */
+	    tableViewTitleCol.setCellValueFactory(new PropertyValueFactory("title"));
+	    tableViewPriceCol.setCellValueFactory(new PropertyValueFactory("price"));
+	  
+	    tableViewUrlCol.setCellValueFactory(new PropertyValueFactory<Item, String>("url"));      
+	    Callback<TableColumn<Item, String>, TableCell<Item, String>> urlCellFactory = new Callback<TableColumn<Item, String>, TableCell<Item, String>>() {
+		    @Override
+		    public TableCell call(TableColumn p) {
+			    urlCell c = new urlCell();
+			    c.addEventHandler(MouseEvent.MOUSE_CLICKED, new urlCellHandler());
+			    return c;
+		    }
+	    };
+	    tableViewUrlCol.setCellFactory(urlCellFactory);
+	    tableViewPostedDateCol.setCellValueFactory(new PropertyValueFactory("postedDate"));
+	  
+	    tableViewTable.refresh();
+	    
+	  }
     
     /**
      * Called when the new button is pressed. Very dummy action - print something in the command prompt.
@@ -124,6 +165,29 @@ public class Controller {
     @FXML
     private void actionNew() {
     	System.out.println("actionNew");
+    }
+    
+    class searchTask extends Task<String> {
+    	private final String keyword;
+    	
+    	public searchTask(String keyword) {
+    		this.keyword = keyword;
+    	}
+    	
+    	@Override
+    	protected String call() throws Exception {
+    		System.out.println("Searching");
+    		int currentPage = 1;
+    		int totalPage = scraper.fetchResultCount(keyword);
+    		do {
+    			result.addAll(scraper.scrape(keyword));
+    			String output = textAreaConsole.getText() + "Finished scraping page " + Integer.toString(currentPage) + "/" + Integer.toString(totalPage) + "...\n";
+    			updateMessage(output);
+    			currentPage += 1;
+    		} while (scraper.nextPage());
+    		updateMessage(textAreaConsole.getText() + "Finished scraping.\n");
+    		return "";
+    	}
     }
     
     class urlCell extends TableCell<Item, String> {
@@ -153,4 +217,5 @@ public class Controller {
     		}
     	}
     }
+    
 }
