@@ -32,8 +32,9 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
-import java.awt.Desktop;
-import java.net.URI;
+import javafx.scene.web.WebView;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 
 /**
@@ -234,16 +235,20 @@ public class Controller {
     class urlCellHandler implements EventHandler<MouseEvent> {
     	@Override
     	public void handle(MouseEvent t) {
-    		if (Desktop.isDesktopSupported()) {
-    			// Try to open URL in browser
-    			try {
-		    		TableCell c = (TableCell) t.getSource();
-		    		Desktop.getDesktop().browse(new URI(c.getItem().toString()));
-    			} catch (Exception e) {
-    				System.out.println("Failed to open URL:");
-    				System.out.println(e);
-    			}
-    		}
+			// Try to open URL in browser
+			try {
+	    		TableCell c = (TableCell) t.getSource();
+	    		WebView web = new WebView();
+	    		web.getEngine().load(c.getItem().toString());
+	    		Scene scene = new Scene(web);
+	    		Stage browser = new Stage();
+	    		browser.setScene(scene);
+	    		browser.show();
+	    		
+			} catch (Exception e) {
+				System.out.println("Failed to open URL:");
+				System.out.println(e);
+			}	
     	}
     }
     
