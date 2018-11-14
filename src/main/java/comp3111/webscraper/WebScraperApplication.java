@@ -55,9 +55,9 @@ public class WebScraperApplication extends Application {
    		stage.setTitle("WebScrapper");
    		stage.show();
     		
-
+   		
 	}
-
+	
 	/**
 	 * Entry point of the program. No argument should be supplied
 	 * @param args - not used.
