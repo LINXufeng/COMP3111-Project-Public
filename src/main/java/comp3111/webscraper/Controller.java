@@ -35,6 +35,7 @@ import javafx.util.Callback;
 import java.awt.Desktop;
 import java.net.URI;
 
+import javafx.scene.control.MenuItem;
 
 /**
  * 
@@ -63,7 +64,6 @@ public class Controller {
     
     @FXML
     private TextArea textAreaConsole;
-  
     
     /*
      * @author Linus
@@ -120,7 +120,6 @@ public class Controller {
      */
     @FXML
     private void actionSearch() {
-    	
 		String keyword = textFieldKeyword.getText();
 		System.out.println("actionSearch: " + keyword);
 		// Initialize or clean the result list
