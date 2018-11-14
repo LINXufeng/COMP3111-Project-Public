@@ -300,7 +300,7 @@ public class Controller {
     
     /**
      * This is a helper method implemented by felix to disable/enable Refine button
-     * @author felixhui
+     * @author felixhui 
      */
     private void setRefineDisable() {
     	refineButton.setDisable(true);

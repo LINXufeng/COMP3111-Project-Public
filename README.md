@@ -16,6 +16,8 @@ This is attempt to make change to README
 
 ## Introduction
 
+```This part is modification of README in the linus branch.```
+
 You are going to form a team of three to work on a project. The project is about web scraping - obtaining and analysis data
 from some websites automatically. You are given a skeleton code written in Java 8 that is already able to use a keyword to
 fetch some data from Craiglist. Please try the [demo program](demo.jar) to have a better idea of what the skeleton code can 
