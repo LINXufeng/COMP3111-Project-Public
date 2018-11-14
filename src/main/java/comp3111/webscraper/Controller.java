@@ -10,7 +10,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Hyperlink;
-<<<<<<< HEAD
 import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
-=======
 
 import java.util.List;
 
@@ -45,10 +43,10 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
-import java.awt.Desktop;
-import java.net.URI;
 
->>>>>>> fb361de25496ccb9be27d0fb97993e15fa951e10
+
+import javafx.scene.control.MenuItem;
+
 
 /**
  * 
@@ -77,7 +75,6 @@ public class Controller {
     
     @FXML
     private TextArea textAreaConsole;
-  
     
     /*
      * @author Linus
@@ -160,25 +157,7 @@ public class Controller {
      */
     @FXML
     private void initialize() {
-<<<<<<< HEAD
-    	// close team information GUI 
-    	anotherRoot = null;
-    	// set refine button and last search button disable
-    	setRefineDisable();
-    	setLastSearchDisable();
-    	// clear searchRecord
-    	searchRecord = new ArrayList<String>();
-    	// clear current keyword
-    	currentKeyword = null;
-    	// clear input text and result console to null
-    	textFieldKeyword.setText("");
-    	textAreaConsole.setText("");
-    	// close about our team window
-    	anotherStage.close();
     	
-=======
-
->>>>>>> fb361de25496ccb9be27d0fb97993e15fa951e10
     }
     
     
@@ -187,7 +166,7 @@ public class Controller {
      */
     @FXML
     private void actionSearch() {
-<<<<<<< HEAD
+
     	System.out.println("actionSearch: " + textFieldKeyword.getText());
     	List<Item> result = scraper.scrape(textFieldKeyword.getText());
     	String output = "";
@@ -195,8 +174,6 @@ public class Controller {
     		output += item.getTitle() + "\t" + item.getPrice() + "\t" + item.getUrl() + "\n";
     	}
     	textAreaConsole.setText(output);
-    	
-    	
     	
     	
     	/*
@@ -219,38 +196,13 @@ public class Controller {
     	/*
     	 * @author Felix
     	 */
-    }
-=======
+    	
     	
 		String keyword = textFieldKeyword.getText();
 		System.out.println("actionSearch: " + keyword);
 		// Initialize or clean the result list
 		result = scraper.getEmptyList();
-		// Attempt to search
-		try {
-			// Create a task for background searching operation
-			searchTask search = new searchTask(keyword);
-			// Bind the console to the search task
-			textAreaConsole.textProperty().bind(search.messageProperty());
-			// Disable the "Go" button when searching
-			search.setOnRunning((succeesesEvent) -> {
-				System.out.println("Searching for " + keyword);
-				searchBtn.setDisable(true);
-			});
-			// Enable the "Go" button after searching
-			search.setOnSucceeded((succeededEvent) -> {
-				tableViewTable.setItems(FXCollections.observableList(result));
-				searchBtn.setDisable(false);
-			});
-			
-			ExecutorService executor = Executors.newFixedThreadPool(1);
-			// Run the task
-			executor.execute(search);
-			// Stop the task after finishing
-			executor.shutdown();
-		} catch (Exception e) {
-			textAreaConsole.setText(e.toString());
-		}
+
 		
 		// Assign which field of Item each columns should show
 	    tableViewTitleCol.setCellValueFactory(new PropertyValueFactory("title"));
@@ -270,8 +222,8 @@ public class Controller {
 	  
 	    // Refresh the table
 	    tableViewTable.refresh();    
-	  }
->>>>>>> fb361de25496ccb9be27d0fb97993e15fa951e10
+	  } 
+
     
     
     
@@ -383,7 +335,20 @@ public class Controller {
     @FXML
     private void actionClose() {
     	System.out.println("actionClose");
-    	initialize();
+    	// close team information GUI 
+    	anotherRoot = null;
+    	// set refine button and last search button disable
+    	setRefineDisable();
+    	setLastSearchDisable();
+    	// clear searchRecord
+    	searchRecord = new ArrayList<String>();
+    	// clear current keyword
+    	currentKeyword = null;
+    	// clear input text and result console to null
+    	textFieldKeyword.setText("");
+    	textAreaConsole.setText("");
+    	// close about our team window
+    	anotherStage.close();
     }
     
     
@@ -428,7 +393,7 @@ public class Controller {
     private void setRefineEnable() {
     	refineButton.setDisable(false);
     }
-<<<<<<< HEAD
+
     /**
      * This is a helper method implemented by felix to disable/enable last search button
      * @author felixhui
@@ -447,8 +412,6 @@ public class Controller {
     
     
     
-}
-=======
     
     /* class searchTask
      * @author Linus
@@ -460,7 +423,6 @@ public class Controller {
     	public searchTask(String keyword) {
     		this.keyword = keyword;
     	}
->>>>>>> fb361de25496ccb9be27d0fb97993e15fa951e10
 
     	@Override
     	protected String call() throws Exception {
@@ -499,24 +461,6 @@ public class Controller {
     	}
     }
     
-    /* class urlCellHandler
-     * @author Linus
-     * Defines the event handler of URL cell for clicking
-     */
-    class urlCellHandler implements EventHandler<MouseEvent> {
-    	@Override
-    	public void handle(MouseEvent t) {
-    		if (Desktop.isDesktopSupported()) {
-    			// Try to open URL in browser
-    			try {
-		    		TableCell c = (TableCell) t.getSource();
-		    		Desktop.getDesktop().browse(new URI(c.getItem().toString()));
-    			} catch (Exception e) {
-    				System.out.println("Failed to open URL:");
-    				System.out.println(e);
-    			}
-    		}
-    	}
-    }
+
     
 }
