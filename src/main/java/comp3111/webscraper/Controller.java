@@ -44,6 +44,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
 
+import javafx.scene.web.WebView;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 
 import javafx.scene.control.MenuItem;
 
@@ -461,6 +465,30 @@ public class Controller {
     	}
     }
     
+
+    /* class urlCellHandler
+     * @author Linus
+     * Defines the event handler of URL cell for clicking
+     */
+    class urlCellHandler implements EventHandler<MouseEvent> {
+    	@Override
+    	public void handle(MouseEvent t) {
+			// Try to open URL in browser
+			try {
+	    		TableCell c = (TableCell) t.getSource();
+	    		WebView web = new WebView();
+	    		web.getEngine().load(c.getItem().toString());
+	    		Scene scene = new Scene(web);
+	    		Stage browser = new Stage();
+	    		browser.setScene(scene);
+	    		browser.show();
+	    		
+			} catch (Exception e) {
+				System.out.println("Failed to open URL:");
+				System.out.println(e);
+			}	
+    	}
+    }
 
     
 }
