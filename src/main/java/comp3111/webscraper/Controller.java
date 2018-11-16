@@ -174,10 +174,16 @@ public class Controller {
     	System.out.println("actionSearch: " + textFieldKeyword.getText());
     	List<Item> result = scraper.scrape(textFieldKeyword.getText());
     	String output = "";
+    	/*
+    	 * @author Tony
+    	 */
     	for (Item item : result) {
-    		output += item.getTitle() + "\t" + item.getPrice() + "\t" + item.getUrl() + "\n";
+    		output += item.getTitle() + "\t\t" + "HKD" + item.getPrice() + "\t" + item.getPortal() + "\t\t" + item.getUrl() + "\n";
     	}
     	textAreaConsole.setText(output);
+    	
+    	task1(labelCount,labelPrice,labelMin,labelLatest,result);
+    	//end of tony
     	
     	
     	/*
