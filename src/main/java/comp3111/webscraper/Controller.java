@@ -12,6 +12,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
+
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.fxml.FXMLLoader;
@@ -39,6 +44,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
@@ -495,6 +501,77 @@ public class Controller {
 			}	
     	}
     }
-
+    
+    /*
+     * @author Tony
+     * 
+     */    
+    
+    int getNumOfData(List<Item> result) { //get the number of data fetched
+    	int num_of_data = 0;
+    	for(Item item : result)
+    		num_of_data++;
+    	return num_of_data;
+    }
+    double getAvgPrice(List<Item> result) { //get the average price
+    	double sum = 0;
+    	for(Item item: result){
+    		sum += item.getPrice();
+    	}
+    	return sum/getNumOfData(result);
+    }
+    Item getMinItem(List<Item> result) { //get the item that is the minimum price
+    	Item min = result.get(0);
+    	for(Item item : result) {
+    		if(item.getPrice() < min.getPrice())
+    			min = item;
+    	}
+    	return min;
+    }
+    Item getLatest(List<Item> result) { //get the latest item
+    	return null;
+    }
+    void task1(Label labelCount,Label labelPrice,Hyperlink labelMin,Hyperlink labelLatest, List<Item> result) {
+    	//task 1 implementation
+    	if(result == null) {
+    		labelCount.setText("0");
+    		labelPrice.setText("-");
+    		labelMin.setText("0");
+    		labelLatest.setText("0");
+    	}
+    	else {
+	    	labelCount.setText("      " + String.valueOf(getNumOfData(result)));
+	    	labelPrice.setText("      HKD " + String.format("%.2f",getAvgPrice(result)));
+	    	
+	    	Item min = getMinItem(result);
+	    	labelMin.setText("      HKD " + String.format("%.2f", min.getPrice()));
+	    	labelMin.setOnAction((ActionEvent e) -> {
+	    		try {
+					Desktop.getDesktop().browse(new URI(min.getUrl()));
+					System.out.print(min.getUrl());
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (URISyntaxException e1) {
+					e1.printStackTrace();
+				}
+	    	});
+    	}
+    }
+    
+    Vector<Item> toNoZeroPrice(List<Item> result){ //exclude the zero price item
+    	if(result == null)
+    		return null;
+		Vector<Item> newResult = new Vector<Item>();
+    	for(Item item : result) {
+    		if(item.getPrice()>0)
+    			newResult.add(item);
+    	}
+    	return newResult;
+    }
+    
+    void sort(List<Item> result) { //sort the list
+    	
+    }
+    //end of tony
     
 }
