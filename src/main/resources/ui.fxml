@@ -31,11 +31,10 @@
 
 <!-- this line specific which class is your controller - comp3111.webscraper.Controller. Thus all events shall be handled by this class -->
 
-<<<<<<< HEAD
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.webscraper.Controller">
-=======
+
+
 <VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.webscraper.Controller">
->>>>>>> fb361de25496ccb9be27d0fb97993e15fa951e10
+
   <children>
   
   	<!-- This is your MenuBar -->
@@ -45,13 +44,11 @@
           <items>
           	<!-- When the button New is clicked, it call actionNew because onAction-->
           	<!-- I did not associate function to most of the buttons (except the button New and Go). Go ahead and edit if you need it -->
-<<<<<<< HEAD
+
             
 			<MenuItem fx:id="LastSearchFXId" disable="true" mnemonicParsing="false" onAction="#actionNew" text="Last Search" />            
 		
-=======
-            <MenuItem fx:id="LastSearchFXId" mnemonicParsing="false" onAction="#actionNew" text="New (call Controller.actionNew())" />
->>>>>>> aaa3d61db92d16b95f1d8778191de5f73cbe4917
+
             <MenuItem mnemonicParsing="false" text="Open" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#actionClose" text="Close" />
@@ -75,12 +72,15 @@
                      <children>
                         <TextField fx:id="textFieldKeyword" layoutX="14.0" layoutY="36.0" prefHeight="25.0" prefWidth="131.0" promptText="Keyword" />
                         <!--  this is the Go button. When it is clicked, it calls Controller.actionSearch() -->
-<<<<<<< HEAD
-                        <Button layoutX="145.0" layoutY="36.0" mnemonicParsing="false" onAction="#actionSearch" prefHeight="25.0" prefWidth="35.0" text="Go" />
+
                         <Button id="Refine" fx:id="refineButton" disable="true" layoutX="123.0" layoutY="75.0" mnemonicParsing="false" onAction="#actionRefine" text="Refine" />
-=======
+
+
+
+
                         <Button fx:id="searchBtn" layoutX="145.0" layoutY="36.0" mnemonicParsing="false" onAction="#actionSearch" prefHeight="25.0" prefWidth="35.0" text="Go" />
->>>>>>> fb361de25496ccb9be27d0fb97993e15fa951e10
+
+
 
                      </children>
                   </AnchorPane>
