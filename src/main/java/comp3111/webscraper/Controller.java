@@ -43,11 +43,9 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
-
 import javafx.scene.web.WebView;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 
 import javafx.scene.control.MenuItem;
 
@@ -176,14 +174,8 @@ public class Controller {
     	System.out.println("actionSearch: " + keyword);
     	List<Item> consoleResult = scraper.scrape(keyword);
     	String output = "";
-    	for (Item item : consoleResult) {
-    		output += item.getTitle() + "\t" + item.getPrice() + "\t" + item.getUrl() + "\n";
-    	}
     	
-    	
-    	// end of prepare result for console   	
-		result = scraper.getEmptyList();
-		// Attempt to search
+
 		searchAndTabularization(keyword);
 		
 	    // Refresh the console
@@ -379,9 +371,10 @@ public class Controller {
     		if(item.getTitle().toLowerCase().contains(textFieldKeyword.getText().toLowerCase())) {
     			correctResult.add(item);
     			System.out.println("we added " +item);
+    			output += item.getTitle() + "\t\t" + "HKD" + item.getPrice() + "\t" + item.getPortal() + "\t\t" + item.getUrl() + "\n";
     		}
     	}
-    	//textAreaConsole.setText(output);
+    	textAreaConsole.setText(output);
     	tableViewTable.setItems(FXCollections.observableList(correctResult));
     	//tableViewTable.setItems(itemList);
     	tableViewTable.refresh();
@@ -421,7 +414,7 @@ public class Controller {
     
     
     
-    /* class searchTask
+    /**
      * @author Linus
      * Define how to search with a keyword, used for Task 3
      */
@@ -452,7 +445,7 @@ public class Controller {
     	}
     }
     
-    /* class urlCell
+    /**
      * @author Linus
      * Defines the behavior of cells in the URL column
      */
@@ -470,28 +463,35 @@ public class Controller {
     	}
     }
     
+    /**
+     * @author Linus
+     * Open browser
+     */
+    private void callBrowser(String url) {
+    	try {
+    		WebView web = new WebView();
+    		web.getEngine().load(url);
+    		Scene scene = new Scene(web);
+    		Stage browser = new Stage();
+    		browser.setScene(scene);
+    		browser.show();
+    	} catch (Exception e) {
+			System.out.println("Failed to open URL:");
+			e.printStackTrace();
+    	}
+    }
+    
 
-    /* class urlCellHandler
+    /**
      * @author Linus
      * Defines the event handler of URL cell for clicking
      */
     class urlCellHandler implements EventHandler<MouseEvent> {
     	@Override
     	public void handle(MouseEvent t) {
-			// Try to open URL in browser
-			try {
-	    		TableCell c = (TableCell) t.getSource();
-	    		WebView web = new WebView();
-	    		web.getEngine().load(c.getItem().toString());
-	    		Scene scene = new Scene(web);
-	    		Stage browser = new Stage();
-	    		browser.setScene(scene);
-	    		browser.show();
-	    		
-			} catch (Exception e) {
-				System.out.println("Failed to open URL:");
-				System.out.println(e);
-			}	
+    		TableCell c = (TableCell) t.getSource();
+    		// Call browser
+    		callBrowser(c.getItem().toString());
     	}
     }
     
@@ -520,6 +520,19 @@ public class Controller {
 				tableViewTable.refresh();
 				textAreaConsole.textProperty().unbind();
 				//textAreaConsole.appendText("testing");
+				
+			    
+		    	/*
+		    	 * @author Tony
+		    	 */
+			    String output = "";
+		    	for (Item item : result) {
+		    		output += item.getTitle() + "\t\t" + "HKD" + item.getPrice() + "\t" + item.getPortal() + "\t\t" + item.getUrl() + "\r\n";
+		    	}
+		    	textAreaConsole.setText(output);
+		    	
+		    	task1(labelCount,labelPrice,labelMin,labelLatest,result);
+		    	//end of tony
 			});
 			
 			ExecutorService executor = Executors.newFixedThreadPool(1);
@@ -549,6 +562,111 @@ public class Controller {
 	    
 	    // Refresh the table
 	    tableViewTable.refresh();
+
     }
 	
+    
+    /*
+     * @author Tony
+     * 
+     */    
+	/**
+	 * get the number of data fetched
+	 * @author tony
+	 * @param result - which is the List<Item> result from scrape function
+	 */
+    int getNumOfData(List<Item> result) { //get the number of data fetched
+    	int num_of_data = 0;
+    	for(Item item : result)
+    		num_of_data++;
+    	return num_of_data;
+    }
+	/**
+	 * get the average price
+	 * @author tony
+	 * @param result - which is the List<Item> result from scrape function
+	 */
+    double getAvgPrice(List<Item> result) { //get the average price
+    	double sum = 0;
+    	for(Item item: result){
+    		sum += item.getPrice();
+    	}
+    	return sum/getNumOfData(result);
+    }
+	/**
+	 * get the item that is the minimun price
+	 * @author tony
+	 * @param result - which is the List<Item> result from scrape function
+	 */
+    Item getMinItem(List<Item> result) { //get the item that is the minimum price
+    	Item min = result.get(0);
+    	for(Item item : result) {
+    		if(item.getPrice() < min.getPrice())
+    			min = item;
+    	}
+    	return min;
+    }
+	/**
+	 * get the latest item
+	 * @author tony
+	 * @param result - which is the List<Item> result from scrape function
+	 */
+    Item getLatest(List<Item> result) { //get the latest item
+    	return null;
+    }
+	/**
+	 * this is task 1 implementation, includes finding the Number of Data Fetched, Average Selling Price, Lowest Selling Price and Latest Post
+	 * @author tony
+	 * @param result - which is the List<Item> result from scrape function
+	 * @param labelCount - is the Number of Data Fetched
+	 * @param labePrice - the Average Selling Price
+	 * @param labelMin - the Lowest Selling Price
+	 * @param labelLatest - the Latest Post
+	 */
+    void task1(Label labelCount,Label labelPrice,Hyperlink labelMin,Hyperlink labelLatest, List<Item> result) {
+    	//task 1 implementation
+    	if(result == null) {
+    		labelCount.setText("0");
+    		labelPrice.setText("-");
+    		labelMin.setText("0");
+    		labelLatest.setText("0");
+    	}
+    	else {
+	    	labelCount.setText("      " + String.valueOf(getNumOfData(result)));
+	    	labelPrice.setText("      HKD " + String.format("%.2f",getAvgPrice(result)));
+	    	
+	    	Item min = getMinItem(result);
+	    	labelMin.setText("      HKD " + String.format("%.2f", min.getPrice()));
+	    	labelMin.setOnAction((actionEvent) -> {
+	    		callBrowser(min.getUrl());
+	    	});
+    	}
+    }
+	/**
+	 * exclude the zero price item
+	 * @author tony
+	 * @param result - which is the List<Item> result from scrape function
+	 * @return return a new list without zero price item
+	 */  
+    Vector<Item> toNoZeroPrice(List<Item> result){ //exclude the zero price item
+    	if(result == null)
+    		return null;
+		Vector<Item> newResult = new Vector<Item>();
+    	for(Item item : result) {
+    		if(item.getPrice()>0)
+    			newResult.add(item);
+    	}
+    	return newResult;
+    }
+	/**
+	 * sort the list
+	 * @author tony
+	 * @param result - which is the List<Item> result from scrape function
+	 * 
+	 */
+    void sort(List<Item> result) { //sort the list
+    	
+    }
+    //end of tony
+    
 }

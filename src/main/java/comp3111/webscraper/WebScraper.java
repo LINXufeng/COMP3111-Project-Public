@@ -97,7 +97,7 @@ public class WebScraper {
 	/* method fetchResultCount
 	 * @author Linus
 	 * This function will return the number of pages of search results using the keyword provided
-	 * Currently only works on the DEFAULT page (Craigslist)�@
+	 * Currently only works on the DEFAULT page (Craigslist)
 	 */
 	public int fetchResultCount(String keyword) {
 		try {
