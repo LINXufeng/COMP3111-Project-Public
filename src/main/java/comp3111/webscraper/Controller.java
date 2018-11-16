@@ -102,9 +102,6 @@ public class Controller {
     @FXML
     private TableColumn<Item, String> tableViewPostedDateCol;
     
-    // List of Item that will be visualized by the tableViewTable
-    // This will observe the following "result" List
-    private ObservableList<Item> itemList;
     
     // List of Item that store the search result
     private List<Item> result;
@@ -113,6 +110,8 @@ public class Controller {
      */
     
     private WebScraper scraper;
+    
+    // private ObservableList<Item> observe;
     
     
     
@@ -154,6 +153,7 @@ public class Controller {
     public Controller() {
     	scraper = new WebScraper();
     	result = scraper.getEmptyList();
+    	// observe = FXCollections.observableList(result);
     }
 
     /**
@@ -170,25 +170,36 @@ public class Controller {
      */
     @FXML
     private void actionSearch() {
-
-    	System.out.println("actionSearch: " + textFieldKeyword.getText());
-    	List<Item> result = scraper.scrape(textFieldKeyword.getText());
+    	String keyword = textFieldKeyword.getText();
+    	
+    	// prepare search result for console
+    	System.out.println("actionSearch: " + keyword);
+    	List<Item> consoleResult = scraper.scrape(keyword);
     	String output = "";
-    	for (Item item : result) {
+    	for (Item item : consoleResult) {
     		output += item.getTitle() + "\t" + item.getPrice() + "\t" + item.getUrl() + "\n";
     	}
-    	textAreaConsole.setText(output);
     	
     	
-    	/*
+    	// end of prepare result for console   	
+		result = scraper.getEmptyList();
+		// Attempt to search
+		searchAndTabularization(keyword);
+		
+	    // Refresh the console
+	    //textAreaConsole.setText(output); // bug here
+	    
+	    
+	    /*
     	 * @author Felix
     	 */
     	// add keyword to "searchRecord" list
+	    
     	currentKeyword = textFieldKeyword.getText();
     	searchRecord.add(textFieldKeyword.getText());
     	CheckSearchRecord();
     	// set 'last search' button enable if there exists some search record
-    	if(searchRecord.size()>=2 && LastSearchFXId.isDisable()==true) {
+    	if(searchRecord.size()>=2) {
     		setLastSearchEnable();
     	}
     	else{
@@ -200,32 +211,6 @@ public class Controller {
     	/*
     	 * @author Felix
     	 */
-    	
-    	
-		String keyword = textFieldKeyword.getText();
-		System.out.println("actionSearch: " + keyword);
-		// Initialize or clean the result list
-		result = scraper.getEmptyList();
-
-		
-		// Assign which field of Item each columns should show
-	    tableViewTitleCol.setCellValueFactory(new PropertyValueFactory("title"));
-	    tableViewPriceCol.setCellValueFactory(new PropertyValueFactory("price"));
-	    tableViewPostedDateCol.setCellValueFactory(new PropertyValueFactory("postedDate"));	  
-	    tableViewUrlCol.setCellValueFactory(new PropertyValueFactory<Item, String>("url"));
-	    // Assign the "Open Browser when clicked" function to URL cells
-	    Callback<TableColumn<Item, String>, TableCell<Item, String>> urlCellFactory = new Callback<TableColumn<Item, String>, TableCell<Item, String>>() {
-		    @Override
-		    public TableCell call(TableColumn p) {
-			    urlCell c = new urlCell();
-			    c.addEventHandler(MouseEvent.MOUSE_CLICKED, new urlCellHandler());
-			    return c;
-		    }
-	    };
-	    tableViewUrlCol.setCellFactory(urlCellFactory);
-	  
-	    // Refresh the table
-	    tableViewTable.refresh();    
 	  } 
 
     
@@ -259,6 +244,10 @@ public class Controller {
     	if(lastSearchKeyword.equals(currentKeyword)) {
     		lastSearchKeyword = searchRecord.get(searchRecord.size() - 2);
     	}
+    	// here, we get item already
+    	
+    	
+    	
     	System.out.println("Before poping last search keyword");
     	CheckSearchRecord();
     	System.out.println("you are invoking last search, the last search keyword is "+lastSearchKeyword);
@@ -266,12 +255,19 @@ public class Controller {
     	// use this keyword do research
     	textFieldKeyword.setText(lastSearchKeyword);
     	System.out.println("actionSearch: " + lastSearchKeyword);
-    	List<Item> result = scraper.scrape(lastSearchKeyword);
+    	List<Item> ConsoleResult = scraper.scrape(lastSearchKeyword);
     	String output = "";
-    	for (Item item : result) {
+    	for (Item item : ConsoleResult) {
     		output += item.getTitle() + "\t" + item.getPrice() + "\t" + item.getUrl() + "\n";
     	}
-    	textAreaConsole.setText(output);
+    	//textAreaConsole.setText(output); // bug
+    	
+    	
+    	
+    	
+    	// Attempt to search  	
+    	searchAndTabularization(lastSearchKeyword);
+    	
     	
     	// after finish research, pop it 
     	searchRecord.remove(lastSearchKeyword);
@@ -320,6 +316,7 @@ public class Controller {
     @FXML
     private void actionQuit() {
     	System.out.println("actionQuit");
+    	actionClose();
     	//scraper.getClass().stop();
     	// simply close it is not correct, you should close all connection first
     	scraper = null;
@@ -349,8 +346,11 @@ public class Controller {
     	// clear current keyword
     	currentKeyword = null;
     	// clear input text and result console to null
+    	textAreaConsole.textProperty().unbind();
     	textFieldKeyword.setText("");
     	textAreaConsole.setText("");
+    	
+    	tableViewTable.setItems(null);
     	// close about our team window
     	anotherStage.close();
     }
@@ -373,15 +373,19 @@ public class Controller {
     @FXML
     private void actionRefine() {
     	System.out.println("actionRefine");
-    	System.out.println("actionSearch: " + textFieldKeyword.getText());
-    	List<Item> result = scraper.scrape(textFieldKeyword.getText());
+    	List<Item> correctResult = new Vector<Item>();
     	String output = "";
     	for (Item item : result) {
     		if(item.getTitle().toLowerCase().contains(textFieldKeyword.getText().toLowerCase())) {
-    			output += item.getTitle() + "\t" + item.getPrice() + "\t" + item.getUrl() + "\n";
+    			correctResult.add(item);
+    			System.out.println("we added " +item);
     		}
     	}
-    	textAreaConsole.setText(output);
+    	//textAreaConsole.setText(output);
+    	tableViewTable.setItems(FXCollections.observableList(correctResult));
+    	//tableViewTable.setItems(itemList);
+    	tableViewTable.refresh();
+    	
     	setRefineDisable();
     	// trigger the update process.) [4]
     	// update();
@@ -422,7 +426,7 @@ public class Controller {
      * Define how to search with a keyword, used for Task 3
      */
     class searchTask extends Task<String> {
-    	private final String keyword;
+    	private String keyword;
     	
     	public searchTask(String keyword) {
     		this.keyword = keyword;
@@ -436,6 +440,7 @@ public class Controller {
     		// Loop through pages until there is no pages left (scraper.nextPage() == false)
     		do {
     			// Add Items scraped by scraper to the list
+    			
     			result.addAll(scraper.scrape(keyword));
     			String output = textAreaConsole.getText() + "Finished scraping page " + Integer.toString(currentPage) + "/" + Integer.toString(totalPage) + "...\n";
     			// Return the message to textAreaConsole and update it
@@ -489,6 +494,61 @@ public class Controller {
 			}	
     	}
     }
-
     
+    
+    /*
+     * 
+     */
+    private void searchAndTabularization(String lastSearchKeyword){
+    	result = scraper.getEmptyList();
+    	try {
+			// Create a task for background searching operation
+			searchTask search = new searchTask(lastSearchKeyword);
+			// Bind the console to the search task
+			textAreaConsole.textProperty().bind(search.messageProperty());
+			// Disable the "Go", "Last Search", "Refine" button when searching
+			search.setOnRunning((succeesesEvent) -> {
+				searchBtn.setDisable(true);
+				setRefineDisable();		
+				
+			});
+			// Enable the "Go", "Last Search", "Refine" button when searching
+			search.setOnSucceeded((succeededEvent) -> {
+				tableViewTable.setItems(FXCollections.observableList(result));
+				searchBtn.setDisable(false);
+				setRefineEnable();		
+				tableViewTable.refresh();
+				textAreaConsole.textProperty().unbind();
+				//textAreaConsole.appendText("testing");
+			});
+			
+			ExecutorService executor = Executors.newFixedThreadPool(1);
+			// Run the task
+			executor.execute(search);
+			// Stop the task after finishing
+			executor.shutdown();
+		} catch (Exception e) {
+			textAreaConsole.setText(e.toString());
+		}
+		
+		// Assign which field of Item each columns should show
+	    tableViewTitleCol.setCellValueFactory(new PropertyValueFactory("title"));
+	    tableViewPriceCol.setCellValueFactory(new PropertyValueFactory("price"));
+	    tableViewPostedDateCol.setCellValueFactory(new PropertyValueFactory("postedDate"));	  
+	    tableViewUrlCol.setCellValueFactory(new PropertyValueFactory<Item, String>("url"));
+	    // Assign the "Open Browser when clicked" function to URL cells
+	    Callback<TableColumn<Item, String>, TableCell<Item, String>> urlCellFactory = new Callback<TableColumn<Item, String>, TableCell<Item, String>>() {
+		    @Override
+		    public TableCell call(TableColumn p) {
+			    urlCell c = new urlCell();
+			    c.addEventHandler(MouseEvent.MOUSE_CLICKED, new urlCellHandler());
+			    return c;
+		    }
+	    };
+	    tableViewUrlCol.setCellFactory(urlCellFactory);
+	    
+	    // Refresh the table
+	    tableViewTable.refresh();
+    }
+	
 }
