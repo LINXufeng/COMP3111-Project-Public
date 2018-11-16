@@ -10,6 +10,11 @@ public class Item {
 	private double price ;
 	private String url ;
 	/*
+	 * @author Tony
+	 */
+	private String portal; //where does it come from
+	//end of tony
+	/*
 	 * @author Linus
 	 * Variables for parsing posted date
 	 */
@@ -38,6 +43,16 @@ public class Item {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+	/*
+	 * @author Tony
+	 */
+	public String getPortal() {
+		return portal;
+	}
+	public void setPortal(String portal) {
+		this.portal = portal;
+	}
+	//end of tony
 	
 	/* method setPostedDate
 	 * method processPostedDate

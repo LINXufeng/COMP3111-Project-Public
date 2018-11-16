@@ -97,7 +97,7 @@ public class WebScraper {
 	/* method fetchResultCount
 	 * @author Linus
 	 * This function will return the number of pages of search results using the keyword provided
-	 * Currently only works on the DEFAULT page (Craigslist)¡@
+	 * Currently only works on the DEFAULT page (Craigslist)
 	 */
 	public int fetchResultCount(String keyword) {
 		try {
@@ -115,6 +115,7 @@ public class WebScraper {
 			//System.out.println(e);
 			return -1;
 		}
+		//System.out.println("Number of results:" + Integer.toString(itemCount));
 		return pageCount;
 	}
 	/*
@@ -161,6 +162,7 @@ public class WebScraper {
 	 */
 	public List<Item> scrape(String keyword) {
 		// This function currently only work on Craigslist
+		//System.out.println("Scraper: "+keyword);
 		try {
 			if (pageCount == -1) {
 				fetchResultCount(keyword);
@@ -169,11 +171,12 @@ public class WebScraper {
 	
 			HtmlPage page;
 			List<?> items;			
-			Vector<Item> result = new Vector<Item>();
+			Vector<Item> searchResult = new Vector<Item>();
 
 			// 120 is the max amount of items shown in Craigslist page
 			int currentPage = (int)Math.ceil(currentCount / 120.0);
 			page = client.getPage(searchUrl + "&s=" + Integer.toString(currentPage * 120));
+			//System.out.println("Page: " + page);
 			items = (List<?>) page.getByXPath("//li[@class='result-row']");
 			// Loop through each grids, based on skeleton code
 			for (int i = 0; i < items.size(); i++) {
@@ -197,11 +200,12 @@ public class WebScraper {
 
 				// Set the price to the item object
 				item.setPrice(new Double(itemPrice.replace("$", "")));
-
-				result.add(item);
+				//System.out.print("XXXXX" + item); // bug
+				searchResult.add(item);
 			}
 			client.close();
-			return result;
+			//System.out.print(">>>>>>>>>>>>>>>"+searchResult.isEmpty());
+			return searchResult;
 		} catch (Exception e) {
 			System.out.println(e);
 		}
