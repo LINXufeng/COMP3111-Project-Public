@@ -110,6 +110,7 @@ public class WebScraper {
 			itemCount = spanTotalCount == null ? 0 : Integer.parseInt(spanTotalCount.asText());
 			pageCount = (int)Math.ceil(itemCount / 120.0);
 			//System.out.println("Number of pages found: " + Integer.toString(pageCount));
+			currentCount = -1;
 		} catch (Exception e) {
 			//System.out.println(e);
 			return -1;
