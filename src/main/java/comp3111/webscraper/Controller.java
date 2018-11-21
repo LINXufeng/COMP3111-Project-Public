@@ -428,6 +428,7 @@ public class Controller {
     	@Override
     	protected String call() throws Exception {
     		System.out.println("Searching");
+    		scraper.setDomain("Craigslist");
     		int currentPage = 1;
     		int totalPage = scraper.fetchResultCount(keyword);
     		// Loop through pages until there is no pages left (scraper.nextPage() == false)
@@ -435,11 +436,27 @@ public class Controller {
     			// Add Items scraped by scraper to the list
     			
     			result.addAll(scraper.scrape(keyword));
-    			String output = textAreaConsole.getText() + "Finished scraping page " + Integer.toString(currentPage) + "/" + Integer.toString(totalPage) + "...\n";
+    			String output = textAreaConsole.getText() + "Finished scraping page " + Integer.toString(currentPage) + "/" + Integer.toString(totalPage) + " on Craigslist...\n";
     			// Return the message to textAreaConsole and update it
     			updateMessage(output);
     			currentPage += 1;
     		} while (scraper.nextPage());
+    		
+    		scraper.setDomain("DCFever");
+    		currentPage = 1;
+    		totalPage = scraper.fetchResultCount(keyword);
+    		// Loop through pages until there is no pages left (scraper.nextPage() == false)
+    		do {
+    			// Add Items scraped by scraper to the list
+    			
+    			result.addAll(scraper.scrape(keyword));
+    			String output = textAreaConsole.getText() + "Finished scraping page " + Integer.toString(currentPage) + "/" + Integer.toString(totalPage) + " on DC Fever...\n";
+    			// Return the message to textAreaConsole and update it
+    			updateMessage(output);
+    			currentPage += 1;
+    		} while (scraper.nextPage());
+    		
+    		totalPage = scraper.fetchResultCount(keyword);
     		updateMessage(textAreaConsole.getText() + "Finished scraping.\n");
     		return "";
     	}
@@ -514,6 +531,7 @@ public class Controller {
 			});
 			// Enable the "Go", "Last Search", "Refine" button when searching
 			search.setOnSucceeded((succeededEvent) -> {
+				
 				tableViewTable.setItems(FXCollections.observableList(result));
 				searchBtn.setDisable(false);
 				setRefineEnable();		
@@ -530,8 +548,9 @@ public class Controller {
 		    		output += item.getTitle() + "\t\t" + "HKD" + item.getPrice() + "\t" + item.getPortal() + "\t\t" + item.getUrl() + "\r\n";
 		    	}
 		    	textAreaConsole.setText(output);
-		    	
-		    	task1(labelCount,labelPrice,labelMin,labelLatest,result);
+		    	if (result.size() != 0) {
+		    		task1(labelCount,labelPrice,labelMin,labelLatest,result);
+		    	}
 		    	//end of tony
 			});
 			

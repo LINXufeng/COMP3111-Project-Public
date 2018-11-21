@@ -73,14 +73,23 @@ public class WebScraper {
 	 * @author Linus
 	 * Extra variables for handling pagination
 	 */
+	// DC Fever does not have year posted, this will be the default value of year
+	private static final int CURRENT_YEAR = 2018;
 	private static final int DEFAULT_PAGE_MAX = 120;
 	private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd hh:mm";
+	private static final String DEFAULT_DOMAIN = "Craigslist";
+	// Maximum number of items in a page
+	private int pageMax;
+	// Date format
+	private String dateFormat;
 	// currentCount tells the index of first item of current page
-	private int currentCount = -1;
+	private int currentCount;
 	// itemCount tells the total number of results
-	private int itemCount = -1;
+	private int itemCount;
 	// pageCount tells the total number of pages
-	private int pageCount = -1;
+	private int pageCount;
+	// currentDomain tells the domain scraper currently searching
+	private String currentDomain;
 	/*
 	 * End of extra variables for handling pagination
 	 */
@@ -92,27 +101,70 @@ public class WebScraper {
 		client = new WebClient();
 		client.getOptions().setCssEnabled(false);
 		client.getOptions().setJavaScriptEnabled(false);
+		setDomain("Craigslist");
+		currentDomain = DEFAULT_DOMAIN;
 	}
 	
-	/* method fetchResultCount
+	/** 
+	 * Set current domain
 	 * @author Linus
-	 * This function will return the number of pages of search results using the keyword provided
-	 * Currently only works on the DEFAULT page (Craigslist)
+	 * @param domain - which is the domain you wish to switch to
+	 * @return return whether the domain is supported
+	 */
+	public boolean setDomain(String domain) {
+		if (domain == "Craigslist") {
+			currentDomain = domain;
+			pageMax = DEFAULT_PAGE_MAX;
+			dateFormat = DEFAULT_DATE_FORMAT;
+		} else if (domain == "DCFever") {
+			currentDomain = domain;
+			pageMax = 30;
+			dateFormat = "dd/MM hh:mm yyyy";
+		} else {
+			return false;
+		}
+		currentCount = -1;
+		itemCount = -1;
+		pageCount = -1;
+		return true;
+	}
+	
+	
+	/** 
+	 * Fetch the number of result of the keyword based on current domain
+	 * @author Linus
+	 * @param keyword - keyword to be searched
+	 * @return number of pages
 	 */
 	public int fetchResultCount(String keyword) {
+		String searchUrl;
+		HtmlPage page;
+		HtmlElement elemTotalCount;
+		currentCount = -1;
 		try {
-			String searchUrl = DEFAULT_URL + "search/sss?sort=rel&query=" + URLEncoder.encode(keyword, "UTF-8");
-			HtmlPage page = client.getPage(searchUrl);
-
-			// Find the <span> that contains number of results
-			HtmlElement spanTotalCount = (HtmlElement)page.getFirstByXPath("//span[@class='totalcount']");
-			// Calculate number of pages of results
-			itemCount = spanTotalCount == null ? 0 : Integer.parseInt(spanTotalCount.asText());
-			pageCount = (int)Math.ceil(itemCount / 120.0);
-			//System.out.println("Number of pages found: " + Integer.toString(pageCount));
-			currentCount = -1;
+			if (currentDomain == "Craigslist") {
+				searchUrl = DEFAULT_URL + "search/sss?sort=rel&query=" + URLEncoder.encode(keyword, "UTF-8");
+				page = client.getPage(searchUrl);
+				elemTotalCount = (HtmlElement)page.getFirstByXPath("//span[@class='totalcount']");
+				itemCount = elemTotalCount == null ? 0 : Integer.parseInt(elemTotalCount.asText());
+				pageCount = (int)Math.ceil((double)itemCount / pageMax);
+				
+			} else if (currentDomain == "DCFever") {
+				searchUrl = "https://www.dcfever.com/trading/search.php?keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&token=isButLa&type=sell";
+				page = client.getPage(searchUrl);
+				//List<HtmlElement> arrElem = page.getByXPath("//div[@class='pagination']");
+				elemTotalCount = (HtmlElement)page.getFirstByXPath("//div[@class='pagination']");
+				String strTotalCount = elemTotalCount.getLastChild().asText();
+				itemCount = Integer.parseInt(strTotalCount.substring(2, strTotalCount.indexOf(' ', 2)));
+				pageCount = (int)Math.ceil((double)itemCount / pageMax);
+				//System.out.println(pageCount);
+				
+			} else {
+				System.out.println("Unimplemented domain.");
+				return -1;
+			}
 		} catch (Exception e) {
-			//System.out.println(e);
+			System.out.println(e);
 			return -1;
 		}
 		//System.out.println("Number of results:" + Integer.toString(itemCount));
@@ -129,7 +181,7 @@ public class WebScraper {
 	 * return false if no more pages
 	 */
 	public boolean nextPage() {
-		currentCount += DEFAULT_PAGE_MAX;
+		currentCount += pageMax;
 		if (currentCount >= itemCount) {
 			return false;
 		}
@@ -161,55 +213,104 @@ public class WebScraper {
 	 * Heavily modified to return results on the current page only based on the current item count variables defined above
 	 */
 	public List<Item> scrape(String keyword) {
-		// This function currently only work on Craigslist
-		//System.out.println("Scraper: "+keyword);
-		try {
-			if (pageCount == -1) {
-				fetchResultCount(keyword);
-			}
-			String searchUrl = DEFAULT_URL + "search/sss?sort=rel&query=" + URLEncoder.encode(keyword, "UTF-8");
+		if (currentDomain == "Craigslist") {
+			try {
+				if (pageCount == -1) {
+					fetchResultCount(keyword);
+				}
+				String searchUrl = DEFAULT_URL + "search/sss?sort=rel&query=" + URLEncoder.encode(keyword, "UTF-8");
+		
+				HtmlPage page;
+				List<?> items;			
+				Vector<Item> searchResult = new Vector<Item>();
 	
-			HtmlPage page;
-			List<?> items;			
-			Vector<Item> searchResult = new Vector<Item>();
-
-			// 120 is the max amount of items shown in Craigslist page
-			int currentPage = (int)Math.ceil(currentCount / 120.0);
-			page = client.getPage(searchUrl + "&s=" + Integer.toString(currentPage * 120));
-			//System.out.println("Page: " + page);
-			items = (List<?>) page.getByXPath("//li[@class='result-row']");
-			// Loop through each grids, based on skeleton code
-			for (int i = 0; i < items.size(); i++) {
-				HtmlElement htmlItem = (HtmlElement) items.get(i);
-				HtmlAnchor itemAnchor = ((HtmlAnchor) htmlItem.getFirstByXPath(".//p[@class='result-info']/a"));
-				// spanPrice will fetch the <span class='result-price'> element in that grid
-				HtmlElement spanPrice = ((HtmlElement) htmlItem.getFirstByXPath(".//a/span[@class='result-price']"));
-				// postedDate will fetch the <time class='result-date'> element in that grid
-				HtmlElement postedDate = ((HtmlElement) htmlItem.getFirstByXPath(".//time[@class='result-date']"));
-				
-				// It is possible that an item doesn't have any price, we set the price to 0.0
-				// in this case
-				String itemPrice = spanPrice == null ? "0.0" : spanPrice.asText();
-
-				Item item = new Item();
-				item.setTitle(itemAnchor.asText());
-				item.setUrl(itemAnchor.getHrefAttribute());
-				
-				// Parse the posted date using the date format defined above
-				item.setPostedDate(postedDate.getAttribute("datetime"), DEFAULT_DATE_FORMAT);
-
-				// Set the price to the item object
-				item.setPrice(new Double(itemPrice.replace("$", "")));
-				//System.out.print("XXXXX" + item); // bug
-				searchResult.add(item);
+				// 120 is the max amount of items shown in Craigslist page
+				int currentPage = (int)Math.ceil(currentCount / 120.0);
+				page = client.getPage(searchUrl + "&s=" + Integer.toString(currentPage * 120));
+				//System.out.println("Page: " + page);
+				items = (List<?>) page.getByXPath("//li[@class='result-row']");
+				// Loop through each grids, based on skeleton code
+				for (int i = 0; i < items.size(); i++) {
+					HtmlElement htmlItem = (HtmlElement) items.get(i);
+					HtmlAnchor itemAnchor = ((HtmlAnchor) htmlItem.getFirstByXPath(".//p[@class='result-info']/a"));
+					// spanPrice will fetch the <span class='result-price'> element in that grid
+					HtmlElement spanPrice = ((HtmlElement) htmlItem.getFirstByXPath(".//a/span[@class='result-price']"));
+					// postedDate will fetch the <time class='result-date'> element in that grid
+					HtmlElement postedDate = ((HtmlElement) htmlItem.getFirstByXPath(".//time[@class='result-date']"));
+					
+					// It is possible that an item doesn't have any price, we set the price to 0.0
+					// in this case
+					String itemPrice = spanPrice == null ? "0.0" : spanPrice.asText();
+	
+					Item item = new Item();
+					item.setTitle(itemAnchor.asText());
+					item.setUrl(itemAnchor.getHrefAttribute());
+					item.setPortal(currentDomain);
+					
+					// Parse the posted date using the date format defined above
+					item.setPostedDate(postedDate.getAttribute("datetime"), DEFAULT_DATE_FORMAT);
+	
+					// Set the price to the item object
+					item.setPrice(new Double(itemPrice.replace("$", "")));
+					//System.out.print("XXXXX" + item); // bug
+					searchResult.add(item);
+				}
+				client.close();
+				//System.out.print(">>>>>>>>>>>>>>>"+searchResult.isEmpty());
+				return searchResult;
+			} catch (Exception e) {
+				System.out.println(e);
 			}
-			client.close();
-			//System.out.print(">>>>>>>>>>>>>>>"+searchResult.isEmpty());
-			return searchResult;
-		} catch (Exception e) {
-			System.out.println(e);
+		} else if (currentDomain == "DCFever") {
+			try {
+				if (pageCount == -1) {
+					fetchResultCount(keyword);
+				}
+				String searchUrl = "https://www.dcfever.com/trading/search.php?token=qpqrrqrperwqqqt&type=sell&keyword=" + URLEncoder.encode(keyword, "UTF-8");
+		
+				HtmlPage page;
+				List<?> items;			
+				Vector<Item> searchResult = new Vector<Item>();
+	
+				int currentPage = (int)Math.ceil(currentCount / pageMax);
+				page = client.getPage(searchUrl + "&page=" + Integer.toString(currentPage));
+				//System.out.println("Page: " + page);
+				items = (List<?>) page.getByXPath("//a[@class='tlist_title']");
+				List<?> priceTag =(List<?>) page.getByXPath("//td[@class='tlist_price']");
+				List<?> dateTag = (List<?>) page.getByXPath("//tr/td[6]");
+				
+				// Loop through each grids, based on skeleton code
+				for (int i = 0; i < items.size(); i++) {
+					HtmlAnchor itemAnchor = (HtmlAnchor) items.get(i);
+					HtmlElement spanPrice = (HtmlElement) priceTag.get(i);
+					HtmlElement date = (HtmlElement) dateTag.get(i);
+					
+					String itemPrice;
+					if(spanPrice == null) {
+						itemPrice = "0.0";
+					}
+					else if(spanPrice.asText().equals("--")) {
+						itemPrice = "0.0";
+					}
+					else itemPrice = spanPrice.asText();
+					
+					Item item = new Item();
+					item.setTitle(itemAnchor.asText());
+					item.setUrl("https://www.dcfever.com/trading/" + itemAnchor.getHrefAttribute());
+					if(itemPrice.length()>3)
+						item.setPrice(new Double(itemPrice.replace("HK$", "").replace(",","")));
+					else item.setPrice(new Double(itemPrice.replace("HK$", "")));
+					item.setPortal("DCFever");
+					item.setPostedDate(date.asText() + " " + Integer.toString(CURRENT_YEAR), dateFormat);
+					searchResult.add(item);
+				}
+				client.close();
+				//System.out.print(">>>>>>>>>>>>>>>"+searchResult.isEmpty());
+				return searchResult;
+			} catch (Exception e) {
+				System.out.println(e);
+			}
 		}
 		return null;
 	}
-
 }
