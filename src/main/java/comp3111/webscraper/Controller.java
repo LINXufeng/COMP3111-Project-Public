@@ -644,11 +644,12 @@ public class Controller {
 	 */
     void task1(Label labelCount,Label labelPrice,Hyperlink labelMin,Hyperlink labelLatest, List<Item> result) {
     	//task 1 implementation
-    	if(result == null) {
-    		labelCount.setText("0");
+    	if(result.size() == 0) {
+    		//Put "-" to Average selling price, lowest selling price and latest post for result not found.
+    		labelCount.setText("\t0");
     		labelPrice.setText("-");
-    		labelMin.setText("0");
-    		labelLatest.setText("0");
+    		labelMin.setText("-");
+    		labelLatest.setText("-");
     	}
     	else {
 	    	labelCount.setText("      " + String.valueOf(getNumOfData(result)));
