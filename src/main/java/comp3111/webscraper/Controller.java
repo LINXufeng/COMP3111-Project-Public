@@ -646,7 +646,12 @@ public class Controller {
 	 * @param result - which is the List<Item> result from scrape function
 	 */
     Item getLatest(List<Item> result) { //get the latest item
-    	return null;
+    	Item latest = result.get(0);
+    	for(Item item : result) {
+    		if((item.getPostedDate().compareTo(latest.getPostedDate())>0))
+    			latest = item;
+    	}
+    	return latest;
     }
 	/**
 	 * this is task 1 implementation, includes finding the Number of Data Fetched, Average Selling Price, Lowest Selling Price and Latest Post
@@ -674,8 +679,13 @@ public class Controller {
 	    	
 	    	Item min = getMinItem(result);
 	    	labelMin.setText("      HKD " + String.format("%.2f", min.getPrice()));
+	    	Item latest = getLatest(result);
+	    	labelLatest.setText(latest.getTitle());
 	    	labelMin.setOnAction((actionEvent) -> {
 	    		callBrowser(min.getUrl());
+	    	});
+	    	labelLatest.setOnAction((actionEvent) -> {
+	    		callBrowser(latest.getUrl());
 	    	});
     	}
     }
