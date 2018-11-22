@@ -13,6 +13,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -531,7 +532,12 @@ public class Controller {
 			});
 			// Enable the "Go", "Last Search", "Refine" button when searching
 			search.setOnSucceeded((succeededEvent) -> {
-				
+				//tony
+				if(result.size()!=0) {
+			    	result = toNoZeroPrice(result); //exclude the $0 items
+			    	Collections.sort(result); //sort the list
+				}
+				//
 				tableViewTable.setItems(FXCollections.observableList(result));
 				searchBtn.setDisable(false);
 				setRefineEnable();		
