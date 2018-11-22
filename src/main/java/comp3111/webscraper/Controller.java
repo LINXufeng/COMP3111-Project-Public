@@ -176,9 +176,10 @@ public class Controller {
     	List<Item> consoleResult = scraper.scrape(keyword);
     	String output = "";
     	
-
+//    	System.out.println("running searchAndtabularziation"); //debug
 		searchAndTabularization(keyword);
-		
+//    	System.out.println("finished running searchAndtabularziation"); //debug
+
 	    // Refresh the console
 	    //textAreaConsole.setText(output); // bug here
 	    
@@ -518,6 +519,7 @@ public class Controller {
      * 
      */
     private void searchAndTabularization(String lastSearchKeyword){
+//    	System.out.println("entered searchAndTabulazation"); //debug
     	result = scraper.getEmptyList();
     	try {
 			// Create a task for background searching operation
@@ -530,11 +532,17 @@ public class Controller {
 				setRefineDisable();		
 				
 			});
+//			System.out.println("before setonsucceedded"); //debug
 			// Enable the "Go", "Last Search", "Refine" button when searching
 			search.setOnSucceeded((succeededEvent) -> {
 				//tony
+//				System.out.println("running setOnsucceeded"); //debug
 				if(result.size()!=0) {
+//					System.out.println("runing tono0"); //debug
 			    	result = toNoZeroPrice(result); //exclude the $0 items
+				}
+				if(result.size()!=0) {
+//					System.out.println("running sorting");//debug
 			    	Collections.sort(result); //sort the list
 				}
 				//
@@ -554,9 +562,10 @@ public class Controller {
 		    		output += item.getTitle() + "\t\t" + "HKD" + item.getPrice() + "\t" + item.getPortal() + "\t\t" + item.getUrl() + "\r\n";
 		    	}
 		    	textAreaConsole.setText(output);
-		    	if (result.size() != 0) {
+//		    	if (result.size() != 0) {
+//		    		System.out.println("running 1"); //debug
 		    		task1(labelCount,labelPrice,labelMin,labelLatest,result);
-		    	}
+//		    	}
 		    	//end of tony
 			});
 			
@@ -651,13 +660,15 @@ public class Controller {
     void task1(Label labelCount,Label labelPrice,Hyperlink labelMin,Hyperlink labelLatest, List<Item> result) {
     	//task 1 implementation
     	if(result.size() == 0) {
+//    		System.out.println("inside task1 if"); //debug
     		//Put "-" to Average selling price, lowest selling price and latest post for result not found.
     		labelCount.setText("\t0");
-    		labelPrice.setText("-");
+    		labelPrice.setText(" -");
     		labelMin.setText("-");
     		labelLatest.setText("-");
     	}
     	else {
+//    		System.out.println("inside task1 else"); //debug
 	    	labelCount.setText("      " + String.valueOf(getNumOfData(result)));
 	    	labelPrice.setText("      HKD " + String.format("%.2f",getAvgPrice(result)));
 	    	
