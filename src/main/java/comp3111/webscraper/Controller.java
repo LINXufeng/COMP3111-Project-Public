@@ -695,15 +695,15 @@ public class Controller {
     	}
     	return newResult;
     }
-	/**
-	 * sort the list
-	 * @author tony
-	 * @param result - which is the List<Item> result from scrape function
-	 * 
-	 */
-    void sort(List<Item> result) { //sort the list
-    	
-    }
+//	/**
+//	 * sort the list
+//	 * @author tony
+//	 * @param result - which is the List<Item> result from scrape function
+//	 * 
+//	 */
+//    void sort(List<Item> result) { //sort the list
+//    	
+//    }
     //end of tony
     
 }
