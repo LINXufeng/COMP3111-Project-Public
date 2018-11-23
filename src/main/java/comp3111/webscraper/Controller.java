@@ -13,6 +13,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -175,9 +176,10 @@ public class Controller {
     	List<Item> consoleResult = scraper.scrape(keyword);
     	String output = "";
     	
-
+//    	System.out.println("running searchAndtabularziation"); //debug
 		searchAndTabularization(keyword);
-		
+//    	System.out.println("finished running searchAndtabularziation"); //debug
+
 	    // Refresh the console
 	    //textAreaConsole.setText(output); // bug here
 	    
@@ -517,6 +519,7 @@ public class Controller {
      * 
      */
     private void searchAndTabularization(String lastSearchKeyword){
+//    	System.out.println("entered searchAndTabulazation"); //debug
     	result = scraper.getEmptyList();
     	try {
 			// Create a task for background searching operation
@@ -529,9 +532,20 @@ public class Controller {
 				setRefineDisable();		
 				
 			});
+//			System.out.println("before setonsucceedded"); //debug
 			// Enable the "Go", "Last Search", "Refine" button when searching
 			search.setOnSucceeded((succeededEvent) -> {
-				
+				//tony
+//				System.out.println("running setOnsucceeded"); //debug
+				if(result.size()!=0) {
+//					System.out.println("runing tono0"); //debug
+			    	result = toNoZeroPrice(result); //exclude the $0 items
+				}
+				if(result.size()!=0) {
+//					System.out.println("running sorting");//debug
+			    	Collections.sort(result); //sort the list
+				}
+				//
 				tableViewTable.setItems(FXCollections.observableList(result));
 				searchBtn.setDisable(false);
 				setRefineEnable();		
@@ -548,9 +562,10 @@ public class Controller {
 		    		output += item.getTitle() + "\t\t" + "HKD" + item.getPrice() + "\t" + item.getPortal() + "\t\t" + item.getUrl() + "\r\n";
 		    	}
 		    	textAreaConsole.setText(output);
-		    	if (result.size() != 0) {
+//		    	if (result.size() != 0) {
+//		    		System.out.println("running 1"); //debug
 		    		task1(labelCount,labelPrice,labelMin,labelLatest,result);
-		    	}
+//		    	}
 		    	//end of tony
 			});
 			
@@ -631,7 +646,12 @@ public class Controller {
 	 * @param result - which is the List<Item> result from scrape function
 	 */
     Item getLatest(List<Item> result) { //get the latest item
-    	return null;
+    	Item latest = result.get(0);
+    	for(Item item : result) {
+    		if((item.getPostedDate().compareTo(latest.getPostedDate())>0))
+    			latest = item;
+    	}
+    	return latest;
     }
 	/**
 	 * this is task 1 implementation, includes finding the Number of Data Fetched, Average Selling Price, Lowest Selling Price and Latest Post
@@ -644,20 +664,28 @@ public class Controller {
 	 */
     void task1(Label labelCount,Label labelPrice,Hyperlink labelMin,Hyperlink labelLatest, List<Item> result) {
     	//task 1 implementation
-    	if(result == null) {
-    		labelCount.setText("0");
-    		labelPrice.setText("-");
-    		labelMin.setText("0");
-    		labelLatest.setText("0");
+    	if(result.size() == 0) {
+//    		System.out.println("inside task1 if"); //debug
+    		//Put "-" to Average selling price, lowest selling price and latest post for result not found.
+    		labelCount.setText("\t0");
+    		labelPrice.setText(" -");
+    		labelMin.setText("-");
+    		labelLatest.setText("-");
     	}
     	else {
+//    		System.out.println("inside task1 else"); //debug
 	    	labelCount.setText("      " + String.valueOf(getNumOfData(result)));
 	    	labelPrice.setText("      HKD " + String.format("%.2f",getAvgPrice(result)));
 	    	
 	    	Item min = getMinItem(result);
 	    	labelMin.setText("      HKD " + String.format("%.2f", min.getPrice()));
+	    	Item latest = getLatest(result);
+	    	labelLatest.setText(latest.getTitle());
 	    	labelMin.setOnAction((actionEvent) -> {
 	    		callBrowser(min.getUrl());
+	    	});
+	    	labelLatest.setOnAction((actionEvent) -> {
+	    		callBrowser(latest.getUrl());
 	    	});
     	}
     }
@@ -677,15 +705,15 @@ public class Controller {
     	}
     	return newResult;
     }
-	/**
-	 * sort the list
-	 * @author tony
-	 * @param result - which is the List<Item> result from scrape function
-	 * 
-	 */
-    void sort(List<Item> result) { //sort the list
-    	
-    }
+//	/**
+//	 * sort the list
+//	 * @author tony
+//	 * @param result - which is the List<Item> result from scrape function
+//	 * 
+//	 */
+//    void sort(List<Item> result) { //sort the list
+//    	
+//    }
     //end of tony
     
 }
