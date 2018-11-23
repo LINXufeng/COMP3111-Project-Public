@@ -13,6 +13,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -43,11 +44,9 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
-
 import javafx.scene.web.WebView;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 
 import javafx.scene.control.MenuItem;
 
@@ -115,29 +114,39 @@ public class Controller {
     
     
     
-    /**
-     * @author felixhui
-    */
+	/**
+	 * The variables below are created by Felix
+	 * @author Felix
+	 * @param LastSearchFXId - which is the id of Menu Item "Last Search"
+	 * @param Button - which is the id of Button "Refine"
+	 * @param anotherRoot - which is the root is used to show team information
+	 * @param anotherStage - which is stage is used to show team information
+	 * @param abountOurTeam_FILE - which is the path is the GUI of team information
+	 * @param currentKeyword - which is the variable track current search record
+	 * @param searchRecord - which is the ArrayList<String> used to record search history
+	 * @param currentKeyword - which is the variable track current search record
+	 * 
+	 */
     @FXML
     private MenuItem LastSearchFXId;
     @FXML
     private Button refineButton;
     @FXML 
-    private Node anotherRoot;	// this root was used to show team information
-    private Stage anotherStage = new Stage();	// this stage is used to show team information
-    private static final String abountOurTeam_FILE = "/aboutOurTeam.fxml";		//this path is the GUI of team information
-    private String currentKeyword = null;	// this variable track current search record
-    
-    private ArrayList<String> searchRecord = new ArrayList<String>();	// record search history
+    private Node anotherRoot;
+    private Stage anotherStage = new Stage();
+    private static final String abountOurTeam_FILE = "/aboutOurTeam.fxml";
+    private String currentKeyword = null;
+    private ArrayList<String> searchRecord = new ArrayList<String>();
+    /**
+     * This method was used to print out history of search  keyword
+     * @author Felix
+     * 
+     */
     public void CheckSearchRecord() {
-    	// check search record
     	for(String record:searchRecord) {
     		System.out.print(record +" ");
     	}
     }
-    /*
-     * end of implementation by felix
-     */
     
     
     
@@ -166,39 +175,32 @@ public class Controller {
     
     
     /**
-     * Called when the search button is pressed.
+     * The method is fired by click button "Go"
+     * 1. The method get keyword from text field 
+     * 2. The method invoke method searchAndTabularization to show information on console and table
+     * 3. The method add keyword to "searchRecord" list
+     * 4. The method invoke method CheckSearchReord check if the keyword just searched has been added 
+     * into "searchRecord" list successfully
+     * 5. The method set 'last search' button enable if there are at least two items(current and last) in search record
+     * 6. The method make the button Refine enabled after a new search ( e.g. Go button is clicked).
+     * @author Felix
+     * 
      */
     @FXML
     private void actionSearch() {
     	String keyword = textFieldKeyword.getText();
     	
-    	// prepare search result for console
+    	// print out the keyword you input
     	System.out.println("actionSearch: " + keyword);
-    	List<Item> consoleResult = scraper.scrape(keyword);
-    	String output = "";
-    	for (Item item : consoleResult) {
-    		output += item.getTitle() + "\t" + item.getPrice() + "\t" + item.getUrl() + "\n";
-    	}
     	
-    	
-    	// end of prepare result for console   	
-		result = scraper.getEmptyList();
-		// Attempt to search
+    	// invoke method searchAndTabularization to show information on console and table
 		searchAndTabularization(keyword);
-		
-	    // Refresh the console
-	    //textAreaConsole.setText(output); // bug here
-	    
-	    
-	    /*
-    	 * @author Felix
-    	 */
     	// add keyword to "searchRecord" list
-	    
     	currentKeyword = textFieldKeyword.getText();
     	searchRecord.add(textFieldKeyword.getText());
+    	// check if the keyword just searched has been added into "searchRecord" list successfully
     	CheckSearchRecord();
-    	// set 'last search' button enable if there exists some search record
+    	// set 'last search' button enable if there are at least two items(current and last) in search record
     	if(searchRecord.size()>=2) {
     		setLastSearchEnable();
     	}
@@ -207,10 +209,6 @@ public class Controller {
     	}
     	// Make the button Refine enabled after a new search ( e.g. Go button is clicked).
     	setRefineEnable();
-    	
-    	/*
-    	 * @author Felix
-    	 */
 	  } 
 
     
@@ -225,7 +223,7 @@ public class Controller {
     
 	/**
      * Called when the new button is pressed. Very dummy action - print something in the command prompt.
-     * @author felixhui
+     * @author Felix
      *
      *New (call Controller.actionNew()) should be renamed to Last Search and revert your search 
      *result to the previous search.[5]
@@ -291,7 +289,7 @@ public class Controller {
     /**
      * Make About your Team showing a new simple dialog that shows all your team members name, 
      * itsc account, and github account.[done!]
-     * @author felixhui
+     * @author Felix
      */
     @FXML
     private void actionAOT() {
@@ -311,7 +309,7 @@ public class Controller {
     
     /**
      * Make Quit button exiting the program and close all connections.[3]
-     * @author felixhui
+     * @author Felix
      */
     @FXML
     private void actionQuit() {
@@ -331,7 +329,7 @@ public class Controller {
     /**
      * Close will clear the current search record and initialize all 
      * tabs on the right to their initial state.[5]
-     * @author felixhui
+     * @author Felix
      */
     @FXML
     private void actionClose() {
@@ -351,6 +349,8 @@ public class Controller {
     	textAreaConsole.setText("");
     	
     	tableViewTable.setItems(null);
+    	result = scraper.getEmptyList();
+    	task1(labelCount,labelPrice,labelMin,labelLatest,result);
     	// close about our team window
     	anotherStage.close();
     }
@@ -368,7 +368,7 @@ public class Controller {
 	 * 
 	 * Make the button Refine disabled (grey) before any keyword is being searched, or after Refine is clicked once.[done!]
 	 * Make the button Refine enabled after a new search ( e.g. Go button is clicked).[done!]
-     * @author felixhui
+     * @author Felix
      */
     @FXML
     private void actionRefine() {
@@ -378,11 +378,16 @@ public class Controller {
     	for (Item item : result) {
     		if(item.getTitle().toLowerCase().contains(textFieldKeyword.getText().toLowerCase())) {
     			correctResult.add(item);
-    			System.out.println("we added " +item);
+    			//System.out.println("we added " +item);
+    			output += item.getTitle() + "\t\t" + "HKD" + item.getPrice() + "\t" + item.getPortal() + "\t\t" + item.getUrl() + "\n";
     		}
     	}
-    	//textAreaConsole.setText(output);
+    	textAreaConsole.setText(output);
     	tableViewTable.setItems(FXCollections.observableList(correctResult));
+//    	if (correctResult.size() != 0) {
+//		System.out.println("running 1"); //debug
+		task1(labelCount,labelPrice,labelMin,labelLatest,correctResult);
+//	}
     	//tableViewTable.setItems(itemList);
     	tableViewTable.refresh();
     	
@@ -393,7 +398,7 @@ public class Controller {
     
     /**
      * This is a helper method implemented by felix to disable/enable Refine button
-     * @author felixhui 
+     * @author Felix
      */
     private void setRefineDisable() {
     	refineButton.setDisable(true);
@@ -404,7 +409,7 @@ public class Controller {
 
     /**
      * This is a helper method implemented by felix to disable/enable last search button
-     * @author felixhui
+     * @author Felix
      */
     private void setLastSearchDisable() {
     	LastSearchFXId.setDisable(true);
@@ -421,9 +426,9 @@ public class Controller {
     
     
     
-    /* class searchTask
-     * @author Linus
+    /**
      * Define how to search with a keyword, used for Task 3
+     * @author Linus
      */
     class searchTask extends Task<String> {
     	private String keyword;
@@ -435,26 +440,46 @@ public class Controller {
     	@Override
     	protected String call() throws Exception {
     		System.out.println("Searching");
+    		scraper.setDomain("Craigslist");
     		int currentPage = 1;
     		int totalPage = scraper.fetchResultCount(keyword);
-    		// Loop through pages until there is no pages left (scraper.nextPage() == false)
-    		do {
-    			// Add Items scraped by scraper to the list
-    			
-    			result.addAll(scraper.scrape(keyword));
-    			String output = textAreaConsole.getText() + "Finished scraping page " + Integer.toString(currentPage) + "/" + Integer.toString(totalPage) + "...\n";
-    			// Return the message to textAreaConsole and update it
-    			updateMessage(output);
-    			currentPage += 1;
-    		} while (scraper.nextPage());
+    		if (totalPage > 0) {
+	    		// Loop through pages until there is no pages left (scraper.nextPage() == false)
+	    		do {
+	    			// Add Items scraped by scraper to the list
+	    			
+	    			result.addAll(scraper.scrape(keyword));
+	    			String output = textAreaConsole.getText() + "Finished scraping page " + Integer.toString(currentPage) + "/" + Integer.toString(totalPage) + " on Craigslist...\n";
+	    			System.out.println("Finished scraping page " + Integer.toString(currentPage) + "/" + Integer.toString(totalPage) + " on Craigslist...\n");
+	    			// Return the message to textAreaConsole and update it
+	    			updateMessage(output);
+	    			currentPage += 1;
+	    		} while (scraper.nextPage());
+    		}
+    		scraper.setDomain("DCFever");
+    		currentPage = 1;
+    		totalPage = scraper.fetchResultCount(keyword);
+    		if (totalPage > 0) {
+	    		// Loop through pages until there is no pages left (scraper.nextPage() == false)
+	    		do {
+	    			// Add Items scraped by scraper to the list
+	    			
+	    			result.addAll(scraper.scrape(keyword));
+	    			String output = textAreaConsole.getText() + "Finished scraping page " + Integer.toString(currentPage) + "/" + Integer.toString(totalPage) + " on DC Fever...\n";
+	    			// Return the message to textAreaConsole and update it
+	    			updateMessage(output);
+	    			currentPage += 1;
+	    		} while (scraper.nextPage());
+    		}
+    		// totalPage = scraper.fetchResultCount(keyword);
     		updateMessage(textAreaConsole.getText() + "Finished scraping.\n");
     		return "";
     	}
     }
     
-    /* class urlCell
-     * @author Linus
+    /**
      * Defines the behavior of cells in the URL column
+     * @author Linus
      */
     class urlCell extends TableCell<Item, String> {
     	@Override
@@ -470,36 +495,47 @@ public class Controller {
     	}
     }
     
-
-    /* class urlCellHandler
+    /**
+     * Open browser
      * @author Linus
-     * Defines the event handler of URL cell for clicking
+     * @param url - URL to be browsed
+     */
+    private void callBrowser(String url) {
+    	try {
+    		WebView web = new WebView();
+    		web.getEngine().load(url);
+    		Scene scene = new Scene(web);
+    		Stage browser = new Stage();
+    		browser.setScene(scene);
+    		browser.show();
+    	} catch (Exception e) {
+			System.out.println("Failed to open URL:");
+			e.printStackTrace();
+    	}
+    }
+    
+
+    /**
+     * Defines the event handler of URL cell when clicked
+     * @author Linus
      */
     class urlCellHandler implements EventHandler<MouseEvent> {
     	@Override
     	public void handle(MouseEvent t) {
-			// Try to open URL in browser
-			try {
-	    		TableCell c = (TableCell) t.getSource();
-	    		WebView web = new WebView();
-	    		web.getEngine().load(c.getItem().toString());
-	    		Scene scene = new Scene(web);
-	    		Stage browser = new Stage();
-	    		browser.setScene(scene);
-	    		browser.show();
-	    		
-			} catch (Exception e) {
-				System.out.println("Failed to open URL:");
-				System.out.println(e);
-			}	
+    		TableCell c = (TableCell) t.getSource();
+    		// Call browser
+    		callBrowser(c.getItem().toString());
     	}
     }
     
     
-    /*
-     * 
+    /**
+     * Start searching and store the results into table and console
+     * @author Felix
+     * @param lastSearchKeyword - keyword to be searched
      */
     private void searchAndTabularization(String lastSearchKeyword){
+//    	System.out.println("entered searchAndTabulazation"); //debug
     	result = scraper.getEmptyList();
     	try {
 			// Create a task for background searching operation
@@ -512,14 +548,42 @@ public class Controller {
 				setRefineDisable();		
 				
 			});
+//			System.out.println("before setonsucceedded"); //debug
 			// Enable the "Go", "Last Search", "Refine" button when searching
 			search.setOnSucceeded((succeededEvent) -> {
+				System.out.println("no. of items:" + result.size());
+				//tony
+//				System.out.println("running setOnsucceeded"); //debug
+				if(result.size()!=0) {
+//					System.out.println("runing tono0"); //debug
+			    	result = toNoZeroPrice(result); //exclude the $0 items
+				}
+				if(result.size()!=0) {
+//					System.out.println("running sorting");//debug
+			    	Collections.sort(result); //sort the list
+				}
+				//
 				tableViewTable.setItems(FXCollections.observableList(result));
 				searchBtn.setDisable(false);
 				setRefineEnable();		
 				tableViewTable.refresh();
 				textAreaConsole.textProperty().unbind();
 				//textAreaConsole.appendText("testing");
+				
+			    
+		    	/*
+		    	 * @author Tony
+		    	 */
+			    String output = "";
+		    	for (Item item : result) {
+		    		output += item.getTitle() + "\t\t" + "HKD" + item.getPrice() + "\t" + item.getPortal() + "\t\t" + item.getUrl() + "\r\n";
+		    	}
+		    	textAreaConsole.setText(output);
+//		    	if (result.size() != 0) {
+//		    		System.out.println("running 1"); //debug
+		    		task1(labelCount,labelPrice,labelMin,labelLatest,result);
+//		    	}
+		    	//end of tony
 			});
 			
 			ExecutorService executor = Executors.newFixedThreadPool(1);
@@ -549,6 +613,127 @@ public class Controller {
 	    
 	    // Refresh the table
 	    tableViewTable.refresh();
+
     }
 	
+    
+    /*
+     * @author Tony
+     * 
+     */    
+	/**
+	 * get the number of data fetched
+	 * @author tony
+	 * @param result - which is the List<Item> result from scrape function
+	 */
+    int getNumOfData(List<Item> result) { //get the number of data fetched
+    	int num_of_data = 0;
+    	for(Item item : result)
+    		num_of_data++;
+    	return num_of_data;
+    }
+	/**
+	 * get the average price
+	 * @author tony
+	 * @param result - which is the List<Item> result from scrape function
+	 */
+    double getAvgPrice(List<Item> result) { //get the average price
+    	double sum = 0;
+    	for(Item item: result){
+    		sum += item.getPrice();
+    	}
+    	return sum/getNumOfData(result);
+    }
+	/**
+	 * get the item that is the minimun price
+	 * @author tony
+	 * @param result - which is the List<Item> result from scrape function
+	 */
+    Item getMinItem(List<Item> result) { //get the item that is the minimum price
+    	Item min = result.get(0);
+    	for(Item item : result) {
+    		if(item.getPrice() < min.getPrice())
+    			min = item;
+    	}
+    	return min;
+    }
+	/**
+	 * get the latest item
+	 * @author tony
+	 * @param result - which is the List<Item> result from scrape function
+	 */
+    Item getLatest(List<Item> result) { //get the latest item
+    	Item latest = result.get(0);
+    	for(Item item : result) {
+    		if((item.getPostedDate().compareTo(latest.getPostedDate())>0))
+    			latest = item;
+    	}
+    	return latest;
+    }
+	/**
+	 * this is task 1 implementation, includes finding the Number of Data Fetched, Average Selling Price, Lowest Selling Price and Latest Post
+	 * @author tony
+	 * @param result - which is the List<Item> result from scrape function
+	 * @param labelCount - is the Number of Data Fetched
+	 * @param labePrice - the Average Selling Price
+	 * @param labelMin - the Lowest Selling Price
+	 * @param labelLatest - the Latest Post
+	 */
+    void task1(Label labelCount,Label labelPrice,Hyperlink labelMin,Hyperlink labelLatest, List<Item> result) {
+    	//task 1 implementation
+    	if(result.size() == 0) {
+		//Put "-" to Average selling price, lowest selling price and latest post for result not found.
+    		labelCount.setText("\t0");
+    		labelPrice.setText(" -");
+    		labelMin.setText("-");
+    		labelMin.setDisable(true);
+    		labelLatest.setText("-");
+    		labelLatest.setDisable(true);
+    	}
+    	else {
+    		labelLatest.setDisable(false);
+    		labelLatest.setDisable(false);
+//    		System.out.println("inside task1 else"); //debug
+	    	labelCount.setText(String.valueOf(getNumOfData(result)));
+	    	labelPrice.setText("HKD " + String.format("%.2f",getAvgPrice(result)));
+	    	
+	    	Item min = getMinItem(result);
+	    	labelMin.setText("HKD " + String.format("%.2f", min.getPrice()));
+	    	Item latest = getLatest(result);
+	    	labelLatest.setText(latest.getTitle());
+	    	labelMin.setOnAction((actionEvent) -> {
+	    		callBrowser(min.getUrl());
+	    	});
+	    	labelLatest.setOnAction((actionEvent) -> {
+	    		callBrowser(latest.getUrl());
+	    	});
+    	}
+    }
+	/**
+	 * exclude the zero price item
+	 * @author tony
+	 * @param result - which is the List<Item> result from scrape function
+	 * @return return a new list without zero price item
+	 */  
+    Vector<Item> toNoZeroPrice(List<Item> result){ //exclude the zero price item
+    	if(result == null)
+    		return null;
+		Vector<Item> newResult = new Vector<Item>();
+    	for(Item item : result) {
+    		if(item.getPrice()>0)
+    			newResult.add(item);
+    	}
+    	return newResult;
+    }
+//	/**
+//	 * sort the list
+//	 * @author tony
+//	 * @param result - which is the List<Item> result from scrape function
+//	 * 
+//	 */
+//    void sort(List<Item> result) { //sort the list
+//    	
+//    }
+    //end of tony
+    
 }

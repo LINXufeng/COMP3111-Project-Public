@@ -5,10 +5,16 @@ import java.util.Locale;
 import java.text.SimpleDateFormat;
 
 
-public class Item {
+//public class Item {
+public class Item implements Comparable<Item>{ //edited by tony for sorting
 	private String title ; 
 	private double price ;
 	private String url ;
+	/*
+	 * @author Tony
+	 */
+	private String portal; //where does it come from
+	//end of tony
 	/*
 	 * @author Linus
 	 * Variables for parsing posted date
@@ -38,6 +44,16 @@ public class Item {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+	/*
+	 * @author Tony
+	 */
+	public String getPortal() {
+		return portal;
+	}
+	public void setPortal(String portal) {
+		this.portal = portal;
+	}
+	//end of tony
 	
 	/* method setPostedDate
 	 * method processPostedDate
@@ -69,4 +85,13 @@ public class Item {
 	/*
 	 * End of functions for posted date
 	 */
+	//tony
+	@Override  
+    public int compareTo(Item item) {  
+		if(this.price == item.getPrice())
+			return (this.portal).compareTo(item.getPortal());
+		else
+			return new Double(this.price).compareTo(new Double(item.getPrice()));
+    }  
+	//end of tony
 }
