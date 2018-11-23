@@ -671,8 +671,7 @@ public class Controller {
     void task1(Label labelCount,Label labelPrice,Hyperlink labelMin,Hyperlink labelLatest, List<Item> result) {
     	//task 1 implementation
     	if(result.size() == 0) {
-//    		System.out.println("inside task1 if"); //debug
-    		//Put "-" to Average selling price, lowest selling price and latest post for result not found.
+		//Put "-" to Average selling price, lowest selling price and latest post for result not found.
     		labelCount.setText("\t0");
     		labelPrice.setText(" -");
     		labelMin.setText("-");
@@ -684,11 +683,11 @@ public class Controller {
     		labelLatest.setDisable(false);
     		labelLatest.setDisable(false);
 //    		System.out.println("inside task1 else"); //debug
-	    	labelCount.setText("      " + String.valueOf(getNumOfData(result)));
-	    	labelPrice.setText("      HKD " + String.format("%.2f",getAvgPrice(result)));
+	    	labelCount.setText(String.valueOf(getNumOfData(result)));
+	    	labelPrice.setText("HKD " + String.format("%.2f",getAvgPrice(result)));
 	    	
 	    	Item min = getMinItem(result);
-	    	labelMin.setText("      HKD " + String.format("%.2f", min.getPrice()));
+	    	labelMin.setText("HKD " + String.format("%.2f", min.getPrice()));
 	    	Item latest = getLatest(result);
 	    	labelLatest.setText(latest.getTitle());
 	    	labelMin.setOnAction((actionEvent) -> {
