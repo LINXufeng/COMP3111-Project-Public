@@ -223,7 +223,7 @@ public class Controller {
     
 	/**
      * Called when the new button is pressed. Very dummy action - print something in the command prompt.
-     * @author felixhui
+     * @author Felix
      *
      *New (call Controller.actionNew()) should be renamed to Last Search and revert your search 
      *result to the previous search.[5]
@@ -289,7 +289,7 @@ public class Controller {
     /**
      * Make About your Team showing a new simple dialog that shows all your team members name, 
      * itsc account, and github account.[done!]
-     * @author felixhui
+     * @author Felix
      */
     @FXML
     private void actionAOT() {
@@ -309,7 +309,7 @@ public class Controller {
     
     /**
      * Make Quit button exiting the program and close all connections.[3]
-     * @author felixhui
+     * @author Felix
      */
     @FXML
     private void actionQuit() {
@@ -329,7 +329,7 @@ public class Controller {
     /**
      * Close will clear the current search record and initialize all 
      * tabs on the right to their initial state.[5]
-     * @author felixhui
+     * @author Felix
      */
     @FXML
     private void actionClose() {
@@ -366,7 +366,7 @@ public class Controller {
 	 * 
 	 * Make the button Refine disabled (grey) before any keyword is being searched, or after Refine is clicked once.[done!]
 	 * Make the button Refine enabled after a new search ( e.g. Go button is clicked).[done!]
-     * @author felixhui
+     * @author Felix
      */
     @FXML
     private void actionRefine() {
@@ -396,7 +396,7 @@ public class Controller {
     
     /**
      * This is a helper method implemented by felix to disable/enable Refine button
-     * @author felixhui 
+     * @author Felix
      */
     private void setRefineDisable() {
     	refineButton.setDisable(true);
@@ -407,7 +407,7 @@ public class Controller {
 
     /**
      * This is a helper method implemented by felix to disable/enable last search button
-     * @author felixhui
+     * @author Felix
      */
     private void setLastSearchDisable() {
     	LastSearchFXId.setDisable(true);
@@ -425,8 +425,8 @@ public class Controller {
     
     
     /**
-     * @author Linus
      * Define how to search with a keyword, used for Task 3
+     * @author Linus
      */
     class searchTask extends Task<String> {
     	private String keyword;
@@ -476,8 +476,8 @@ public class Controller {
     }
     
     /**
-     * @author Linus
      * Defines the behavior of cells in the URL column
+     * @author Linus
      */
     class urlCell extends TableCell<Item, String> {
     	@Override
@@ -494,8 +494,9 @@ public class Controller {
     }
     
     /**
-     * @author Linus
      * Open browser
+     * @author Linus
+     * @param url - URL to be browsed
      */
     private void callBrowser(String url) {
     	try {
@@ -513,8 +514,8 @@ public class Controller {
     
 
     /**
+     * Defines the event handler of URL cell when clicked
      * @author Linus
-     * Defines the event handler of URL cell for clicking
      */
     class urlCellHandler implements EventHandler<MouseEvent> {
     	@Override
@@ -526,8 +527,10 @@ public class Controller {
     }
     
     
-    /*
-     * 
+    /**
+     * Start searching and store the results into table and console
+     * @author Felix
+     * @param lastSearchKeyword - keyword to be searched
      */
     private void searchAndTabularization(String lastSearchKeyword){
 //    	System.out.println("entered searchAndTabulazation"); //debug

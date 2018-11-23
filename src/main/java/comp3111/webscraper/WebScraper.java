@@ -173,11 +173,11 @@ public class WebScraper {
 	 * End of method fetchResultCount
 	 */
 	
-	/* method nextPage
-	 * @author Linus
+	/** 
 	 * Add the currentCount by max number of items per page
 	 * return true if another page should exists
 	 * return false if no more pages
+	 * @author Linus
 	 */
 	public boolean nextPage() {
 		currentCount += pageMax;
@@ -191,10 +191,10 @@ public class WebScraper {
 	 * End of method nextPage
 	 */
 	
-	/* method getEmptyList
-	 * @author Linus
+	/** 
 	 * Just an helper function to help instantiating an empty list in the correct list type
 	 * Which by default is Vector
+	 * @author Linus
 	 */
 	public List<Item> getEmptyList() {
 		return new Vector<Item>();
@@ -204,13 +204,15 @@ public class WebScraper {
 	 */
 	
 	/**
-	 * The only method implemented in this class, to scrape web content from the craigslist
+	 * This method implement the search function for Task 3
+	 * use fetchResultCount first to get the number of pages
+	 * use nextPage to trigger searching of next page
+	 * use setDomain to set domain
+	 * such that it can integrate better in a multi-thread environment
 	 * 
+	 * @author Linus
 	 * @param keyword - the keyword you want to search
 	 * @return A list of Item that has found. A zero size list is return if nothing is found. Null if any exception (e.g. no connectivity)
-	 */
-	/*
-	 * Heavily modified to return results on the current page only based on the current item count variables defined above
 	 */
 	public List<Item> scrape(String keyword) {
 		if (currentDomain == "Craigslist") {
