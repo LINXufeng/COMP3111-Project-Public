@@ -114,29 +114,39 @@ public class Controller {
     
     
     
-    /**
-     * @author felixhui
-    */
+	/**
+	 * The variables below are created by Felix
+	 * @author Felix
+	 * @param LastSearchFXId - which is the id of Menu Item "Last Search"
+	 * @param Button - which is the id of Button "Refine"
+	 * @param anotherRoot - which is the root is used to show team information
+	 * @param anotherStage - which is stage is used to show team information
+	 * @param abountOurTeam_FILE - which is the path is the GUI of team information
+	 * @param currentKeyword - which is the variable track current search record
+	 * @param searchRecord - which is the ArrayList<String> used to record search history
+	 * @param currentKeyword - which is the variable track current search record
+	 * 
+	 */
     @FXML
     private MenuItem LastSearchFXId;
     @FXML
     private Button refineButton;
     @FXML 
-    private Node anotherRoot;	// this root was used to show team information
-    private Stage anotherStage = new Stage();	// this stage is used to show team information
-    private static final String abountOurTeam_FILE = "/aboutOurTeam.fxml";		//this path is the GUI of team information
-    private String currentKeyword = null;	// this variable track current search record
-    
-    private ArrayList<String> searchRecord = new ArrayList<String>();	// record search history
+    private Node anotherRoot;
+    private Stage anotherStage = new Stage();
+    private static final String abountOurTeam_FILE = "/aboutOurTeam.fxml";
+    private String currentKeyword = null;
+    private ArrayList<String> searchRecord = new ArrayList<String>();
+    /**
+     * This method was used to print out history of search  keyword
+     * @author Felix
+     * 
+     */
     public void CheckSearchRecord() {
-    	// check search record
     	for(String record:searchRecord) {
     		System.out.print(record +" ");
     	}
     }
-    /*
-     * end of implementation by felix
-     */
     
     
     
@@ -165,34 +175,31 @@ public class Controller {
     
     
     /**
-     * Called when the search button is pressed.
+     * The method is fired by click button "Go"
+     * 1. The method get keyword from text field 
+     * 2. The method invoke method searchAndTabularization to show information on console and table
+     * 3. The method add keyword to "searchRecord" list
+     * 4. The method invoke method CheckSearchReord check if the keyword just searched has been added 
+     * into "searchRecord" list successfully
+     * 5. The method set 'last search' button enable if there are at least two items(current and last) in search record
+     * 6. The method make the button Refine enabled after a new search ( e.g. Go button is clicked).
+     * @author Felix
+     * 
      */
     @FXML
     private void actionSearch() {
     	String keyword = textFieldKeyword.getText();
     	
-    	// prepare search result for console
+    	// print out the keyword you input
     	System.out.println("actionSearch: " + keyword);
-    	List<Item> consoleResult = scraper.scrape(keyword);
-    	String output = "";
-    	
-//    	System.out.println("running searchAndtabularziation"); //debug
+    	// invoke method searchAndTabularization to show information on console and table
 		searchAndTabularization(keyword);
-//    	System.out.println("finished running searchAndtabularziation"); //debug
-
-	    // Refresh the console
-	    //textAreaConsole.setText(output); // bug here
-	    
-	    
-	    /*
-    	 * @author Felix
-    	 */
     	// add keyword to "searchRecord" list
-	    
     	currentKeyword = textFieldKeyword.getText();
     	searchRecord.add(textFieldKeyword.getText());
+    	// check if the keyword just searched has been added into "searchRecord" list successfully
     	CheckSearchRecord();
-    	// set 'last search' button enable if there exists some search record
+    	// set 'last search' button enable if there are at least two items(current and last) in search record
     	if(searchRecord.size()>=2) {
     		setLastSearchEnable();
     	}
@@ -201,10 +208,6 @@ public class Controller {
     	}
     	// Make the button Refine enabled after a new search ( e.g. Go button is clicked).
     	setRefineEnable();
-    	
-    	/*
-    	 * @author Felix
-    	 */
 	  } 
 
     
