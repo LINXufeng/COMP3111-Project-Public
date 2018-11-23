@@ -349,6 +349,8 @@ public class Controller {
     	textAreaConsole.setText("");
     	
     	tableViewTable.setItems(null);
+    	result = scraper.getEmptyList();
+    	task1(labelCount,labelPrice,labelMin,labelLatest,result);
     	// close about our team window
     	anotherStage.close();
     }
