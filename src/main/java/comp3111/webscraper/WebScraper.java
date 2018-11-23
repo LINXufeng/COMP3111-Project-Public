@@ -154,10 +154,9 @@ public class WebScraper {
 				page = client.getPage(searchUrl);
 				//List<HtmlElement> arrElem = page.getByXPath("//div[@class='pagination']");
 				elemTotalCount = (HtmlElement)page.getFirstByXPath("//div[@class='pagination']");
-				String strTotalCount = elemTotalCount.getLastChild().asText();
-				itemCount = Integer.parseInt(strTotalCount.substring(2, strTotalCount.indexOf(' ', 2)));
+				String strTotalCount = elemTotalCount == null ? "" : elemTotalCount.getLastChild().asText();
+				itemCount = strTotalCount == "" ? 0 : Integer.parseInt(strTotalCount.substring(2, strTotalCount.indexOf(' ', 2)));
 				pageCount = (int)Math.ceil((double)itemCount / pageMax);
-				//System.out.println(pageCount);
 				
 			} else {
 				System.out.println("Unimplemented domain.");

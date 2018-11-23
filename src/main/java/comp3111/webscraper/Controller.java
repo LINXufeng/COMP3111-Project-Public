@@ -437,32 +437,34 @@ public class Controller {
     		scraper.setDomain("Craigslist");
     		int currentPage = 1;
     		int totalPage = scraper.fetchResultCount(keyword);
-    		// Loop through pages until there is no pages left (scraper.nextPage() == false)
-    		do {
-    			// Add Items scraped by scraper to the list
-    			
-    			result.addAll(scraper.scrape(keyword));
-    			String output = textAreaConsole.getText() + "Finished scraping page " + Integer.toString(currentPage) + "/" + Integer.toString(totalPage) + " on Craigslist...\n";
-    			// Return the message to textAreaConsole and update it
-    			updateMessage(output);
-    			currentPage += 1;
-    		} while (scraper.nextPage());
-    		
+    		if (totalPage > 0) {
+	    		// Loop through pages until there is no pages left (scraper.nextPage() == false)
+	    		do {
+	    			// Add Items scraped by scraper to the list
+	    			
+	    			result.addAll(scraper.scrape(keyword));
+	    			String output = textAreaConsole.getText() + "Finished scraping page " + Integer.toString(currentPage) + "/" + Integer.toString(totalPage) + " on Craigslist...\n";
+	    			// Return the message to textAreaConsole and update it
+	    			updateMessage(output);
+	    			currentPage += 1;
+	    		} while (scraper.nextPage());
+    		}
     		scraper.setDomain("DCFever");
     		currentPage = 1;
     		totalPage = scraper.fetchResultCount(keyword);
-    		// Loop through pages until there is no pages left (scraper.nextPage() == false)
-    		do {
-    			// Add Items scraped by scraper to the list
-    			
-    			result.addAll(scraper.scrape(keyword));
-    			String output = textAreaConsole.getText() + "Finished scraping page " + Integer.toString(currentPage) + "/" + Integer.toString(totalPage) + " on DC Fever...\n";
-    			// Return the message to textAreaConsole and update it
-    			updateMessage(output);
-    			currentPage += 1;
-    		} while (scraper.nextPage());
-    		
-    		totalPage = scraper.fetchResultCount(keyword);
+    		if (totalPage > 0) {
+	    		// Loop through pages until there is no pages left (scraper.nextPage() == false)
+	    		do {
+	    			// Add Items scraped by scraper to the list
+	    			
+	    			result.addAll(scraper.scrape(keyword));
+	    			String output = textAreaConsole.getText() + "Finished scraping page " + Integer.toString(currentPage) + "/" + Integer.toString(totalPage) + " on DC Fever...\n";
+	    			// Return the message to textAreaConsole and update it
+	    			updateMessage(output);
+	    			currentPage += 1;
+	    		} while (scraper.nextPage());
+    		}
+    		// totalPage = scraper.fetchResultCount(keyword);
     		updateMessage(textAreaConsole.getText() + "Finished scraping.\n");
     		return "";
     	}
@@ -674,9 +676,13 @@ public class Controller {
     		labelCount.setText("\t0");
     		labelPrice.setText(" -");
     		labelMin.setText("-");
+    		labelMin.setDisable(true);
     		labelLatest.setText("-");
+    		labelLatest.setDisable(true);
     	}
     	else {
+    		labelLatest.setDisable(false);
+    		labelLatest.setDisable(false);
 //    		System.out.println("inside task1 else"); //debug
 	    	labelCount.setText("      " + String.valueOf(getNumOfData(result)));
 	    	labelPrice.setText("      HKD " + String.format("%.2f",getAvgPrice(result)));
