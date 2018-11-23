@@ -123,7 +123,7 @@ public class WebScraper {
 		} else {
 			return false;
 		}
-		currentCount = -1;
+		currentCount = 0;
 		itemCount = -1;
 		pageCount = -1;
 		return true;
@@ -140,7 +140,7 @@ public class WebScraper {
 		String searchUrl;
 		HtmlPage page;
 		HtmlElement elemTotalCount;
-		currentCount = -1;
+		currentCount = 0;
 		try {
 			if (currentDomain == "Craigslist") {
 				searchUrl = DEFAULT_URL + "search/sss?sort=rel&query=" + URLEncoder.encode(keyword, "UTF-8");
@@ -181,6 +181,7 @@ public class WebScraper {
 	 */
 	public boolean nextPage() {
 		currentCount += pageMax;
+		//System.out.println("CurrentCount: " + currentCount + " pageMax: " + pageMax + " itemCount: " + this.itemCount);
 		if (currentCount >= itemCount) {
 			return false;
 		}
@@ -217,7 +218,7 @@ public class WebScraper {
 				if (pageCount == -1) {
 					fetchResultCount(keyword);
 				}
-				String searchUrl = DEFAULT_URL + "search/sss?sort=rel&query=" + URLEncoder.encode(keyword, "UTF-8");
+				String searchUrl = DEFAULT_URL + "search/sss?sort=rel&searchNearby=1&query=" + URLEncoder.encode(keyword, "UTF-8");
 		
 				HtmlPage page;
 				List<?> items;			
@@ -225,8 +226,9 @@ public class WebScraper {
 	
 				// 120 is the max amount of items shown in Craigslist page
 				int currentPage = (int)Math.ceil(currentCount / 120.0);
+				// System.out.println("CurrentCount: " + currentCount);
 				page = client.getPage(searchUrl + "&s=" + Integer.toString(currentPage * 120));
-				//System.out.println("Page: " + page);
+				// System.out.println("Page: " + page);
 				items = (List<?>) page.getByXPath("//li[@class='result-row']");
 				// Loop through each grids, based on skeleton code
 				for (int i = 0; i < items.size(); i++) {
@@ -271,13 +273,12 @@ public class WebScraper {
 				List<?> items;			
 				Vector<Item> searchResult = new Vector<Item>();
 	
-				int currentPage = (int)Math.ceil(currentCount / pageMax);
+				int currentPage = (int)Math.ceil(currentCount / pageMax) + 1;
 				page = client.getPage(searchUrl + "&page=" + Integer.toString(currentPage));
-				//System.out.println("Page: " + page);
+				// System.out.println("Page: " + page);
 				items = (List<?>) page.getByXPath("//a[@class='tlist_title']");
 				List<?> priceTag =(List<?>) page.getByXPath("//td[@class='tlist_price']");
 				List<?> dateTag = (List<?>) page.getByXPath("//tr/td[6]");
-				
 				// Loop through each grids, based on skeleton code
 				for (int i = 0; i < items.size(); i++) {
 					HtmlAnchor itemAnchor = (HtmlAnchor) items.get(i);

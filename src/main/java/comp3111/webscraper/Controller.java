@@ -173,7 +173,7 @@ public class Controller {
     	
     	// prepare search result for console
     	System.out.println("actionSearch: " + keyword);
-    	List<Item> consoleResult = scraper.scrape(keyword);
+    	//List<Item> consoleResult = scraper.scrape(keyword);
     	String output = "";
     	
 //    	System.out.println("running searchAndtabularziation"); //debug
@@ -444,6 +444,7 @@ public class Controller {
 	    			
 	    			result.addAll(scraper.scrape(keyword));
 	    			String output = textAreaConsole.getText() + "Finished scraping page " + Integer.toString(currentPage) + "/" + Integer.toString(totalPage) + " on Craigslist...\n";
+	    			System.out.println("Finished scraping page " + Integer.toString(currentPage) + "/" + Integer.toString(totalPage) + " on Craigslist...\n");
 	    			// Return the message to textAreaConsole and update it
 	    			updateMessage(output);
 	    			currentPage += 1;
@@ -541,6 +542,7 @@ public class Controller {
 //			System.out.println("before setonsucceedded"); //debug
 			// Enable the "Go", "Last Search", "Refine" button when searching
 			search.setOnSucceeded((succeededEvent) -> {
+				System.out.println("no. of items:" + result.size());
 				//tony
 //				System.out.println("running setOnsucceeded"); //debug
 				if(result.size()!=0) {
