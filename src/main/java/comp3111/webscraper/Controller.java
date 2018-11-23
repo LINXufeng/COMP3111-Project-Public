@@ -287,9 +287,10 @@ public class Controller {
     
     
     /**
-     * Make About your Team showing a new simple dialog that shows all your team members name, 
-     * itsc account, and github account.[done!]
+     * The method make about our Team showing a new simple dialog that shows all your team members name, 
+     * itsc account, and github account.
      * @author Felix
+     * 
      */
     @FXML
     private void actionAOT() {
