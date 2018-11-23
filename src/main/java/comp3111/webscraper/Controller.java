@@ -372,12 +372,16 @@ public class Controller {
     	for (Item item : result) {
     		if(item.getTitle().toLowerCase().contains(textFieldKeyword.getText().toLowerCase())) {
     			correctResult.add(item);
-    			System.out.println("we added " +item);
+    			//System.out.println("we added " +item);
     			output += item.getTitle() + "\t\t" + "HKD" + item.getPrice() + "\t" + item.getPortal() + "\t\t" + item.getUrl() + "\n";
     		}
     	}
     	textAreaConsole.setText(output);
     	tableViewTable.setItems(FXCollections.observableList(correctResult));
+//    	if (correctResult.size() != 0) {
+//		System.out.println("running 1"); //debug
+		task1(labelCount,labelPrice,labelMin,labelLatest,correctResult);
+//	}
     	//tableViewTable.setItems(itemList);
     	tableViewTable.refresh();
     	
