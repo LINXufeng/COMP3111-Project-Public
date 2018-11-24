@@ -204,10 +204,10 @@ public class WebScraper {
 	 */
 	
 	/**
-	 * This method implement the search function for Task 3
-	 * use fetchResultCount first to get the number of pages
-	 * use nextPage to trigger searching of next page
-	 * use setDomain to set domain
+	 * This method implement the search function for Task 3,
+	 * use fetchResultCount first to get the number of pages,
+	 * use nextPage to trigger searching of next page,
+	 * use setDomain to set domain,
 	 * such that it can integrate better in a multi-thread environment
 	 * 
 	 * @author Linus
