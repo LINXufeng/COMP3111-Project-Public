@@ -183,7 +183,7 @@ public class Controller {
      * into "searchRecord" list successfully
      * 5. The method set 'last search' button enable if there are at least two items(current and last) in search record
      * 6. The method make the button Refine enabled after a new search ( e.g. Go button is clicked).
-     * @author Felix
+     * @author Felix, Linus, Tony
      * 
      */
     @FXML
@@ -218,18 +218,15 @@ public class Controller {
     
     
     
-    
-    
-    
-	/**
-     * Called when the new button is pressed. Very dummy action - print something in the command prompt.
+    /**
+     * The method is fired by click menu item "Last Search"
+     * 1. Check if the lastRecord is the keyword you just search, if yes, use keyword before it
+     * 2. The method revert your search result to the previous search.
+     * 3. Before any keyword is being searched, or after Last Search is clicked once, 
+	 * it should be disabled (gray and unable to be clicked).
+     * 4. Last Search will be enabled after a new search ((Go) button is clicked).
      * @author Felix
-     *
-     *New (call Controller.actionNew()) should be renamed to Last Search and revert your search 
-     *result to the previous search.[5]
-	 *Before any keyword is being searched, or after Last Search is clicked once, 
-	 *it should be disabled (gray and unable to be clicked).[2]
-	 *Last Search will be enabled after a new search ((Go) button is clicked).[2]
+     * 
      */
     @FXML
     private void actionNew() {
@@ -242,9 +239,6 @@ public class Controller {
     	if(lastSearchKeyword.equals(currentKeyword)) {
     		lastSearchKeyword = searchRecord.get(searchRecord.size() - 2);
     	}
-    	// here, we get item already
-    	
-    	
     	
     	System.out.println("Before poping last search keyword");
     	CheckSearchRecord();
@@ -258,15 +252,8 @@ public class Controller {
     	for (Item item : ConsoleResult) {
     		output += item.getTitle() + "\t" + item.getPrice() + "\t" + item.getUrl() + "\n";
     	}
-    	//textAreaConsole.setText(output); // bug
-    	
-    	
-    	
-    	
     	// Attempt to search  	
     	searchAndTabularization(lastSearchKeyword);
-    	
-    	
     	// after finish research, pop it 
     	searchRecord.remove(lastSearchKeyword);
     	System.out.println("after poping last search keyword");
@@ -287,9 +274,11 @@ public class Controller {
     
     
     /**
-     * Make About your Team showing a new simple dialog that shows all your team members name, 
-     * itsc account, and github account.[done!]
+     * The method is fired by clicking menu item "about your team"
+     * The method make about our Team showing a new simple dialog that shows all your team members name, 
+     * itsc account, and github account.
      * @author Felix
+     * 
      */
     @FXML
     private void actionAOT() {
@@ -308,15 +297,14 @@ public class Controller {
     }
     
     /**
-     * Make Quit button exiting the program and close all connections.[3]
+     * The method is fired by clicking menu item "Quit"
+     * Make Quit button exiting the program and close all connections.
      * @author Felix
      */
     @FXML
     private void actionQuit() {
     	System.out.println("actionQuit");
     	actionClose();
-    	//scraper.getClass().stop();
-    	// simply close it is not correct, you should close all connection first
     	scraper = null;
         System.exit(0);
     }
@@ -327,9 +315,11 @@ public class Controller {
     
     
     /**
-     * Close will clear the current search record and initialize all 
+     * The method is fired by clicking menu item "Close"
+     * The method will clear the current search record and initialize all 
      * tabs on the right to their initial state.[5]
      * @author Felix
+     * 
      */
     @FXML
     private void actionClose() {
@@ -347,7 +337,6 @@ public class Controller {
     	textAreaConsole.textProperty().unbind();
     	textFieldKeyword.setText("");
     	textAreaConsole.setText("");
-    	
     	tableViewTable.setItems(null);
     	result = scraper.getEmptyList();
     	task1(labelCount,labelPrice,labelMin,labelLatest,result);
@@ -357,17 +346,24 @@ public class Controller {
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     /**
-     * Create an extra button that shows Refine just below the Go button with at least 5px of space.[done]
-     * Make this button right align the Go button.[done!]
-     * when the refine button is clicked, filter the searched data and keep those items with their titles 
-     * containing the keywords typed in the text area.[done!]
-     * 
-	 * update all tabs on the right. (Note: the correctness of the info of the tabs may depend on other features. 
-	 * This requirement needs only to trigger the update process.) [4]
-	 * 
-	 * Make the button Refine disabled (grey) before any keyword is being searched, or after Refine is clicked once.[done!]
-	 * Make the button Refine enabled after a new search ( e.g. Go button is clicked).[done!]
+     * The method is fired by clicking button "Refine"
+     * The method searched data and keep those items with their titles 
+     * containing the keywords typed in the text area.
+	 * And then it update all tabs on the right. 
+	 * Make the button Refine disabled (grey) before any keyword is being searched, 
+	 * or after Refine is clicked once.
+	 * Make the button Refine enabled after a new search 
      * @author Felix
      */
     @FXML
@@ -378,42 +374,42 @@ public class Controller {
     	for (Item item : result) {
     		if(item.getTitle().toLowerCase().contains(textFieldKeyword.getText().toLowerCase())) {
     			correctResult.add(item);
-    			//System.out.println("we added " +item);
     			output += item.getTitle() + "\t\t" + "HKD" + item.getPrice() + "\t" + item.getPortal() + "\t\t" + item.getUrl() + "\n";
     		}
     	}
     	textAreaConsole.setText(output);
     	tableViewTable.setItems(FXCollections.observableList(correctResult));
-//    	if (correctResult.size() != 0) {
-//		System.out.println("running 1"); //debug
 		task1(labelCount,labelPrice,labelMin,labelLatest,correctResult);
-//	}
-    	//tableViewTable.setItems(itemList);
     	tableViewTable.refresh();
-    	
     	setRefineDisable();
-    	// trigger the update process.) [4]
-    	// update();
     }
     
     /**
-     * This is a helper method implemented by felix to disable/enable Refine button
+     * This is a helper method to disable Refine button
      * @author Felix
      */
     private void setRefineDisable() {
     	refineButton.setDisable(true);
     }
+    /**
+     * This is a helper method to enable Refine button
+     * @author Felix
+     */
     private void setRefineEnable() {
     	refineButton.setDisable(false);
     }
 
     /**
-     * This is a helper method implemented by felix to disable/enable last search button
+     * This is a helper method to disable last search button
      * @author Felix
      */
     private void setLastSearchDisable() {
     	LastSearchFXId.setDisable(true);
     }
+    /**
+     * This is a helper method to enable last search button
+     * @author Felix
+     */
     private void setLastSearchEnable() {
     	LastSearchFXId.setDisable(false);
     }
@@ -531,7 +527,7 @@ public class Controller {
     
     /**
      * Start searching and store the results into table and console
-     * @author Felix
+     * @author Felix, Linus, Tony
      * @param lastSearchKeyword - keyword to be searched
      */
     private void searchAndTabularization(String lastSearchKeyword){
@@ -634,7 +630,7 @@ public class Controller {
     }
 	/**
 	 * get the average price
-	 * @author tony
+	 * @author Tony
 	 * @param result - which is the List<Item> result from scrape function
 	 */
     double getAvgPrice(List<Item> result) { //get the average price
