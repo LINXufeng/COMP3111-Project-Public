@@ -175,9 +175,8 @@ public class WebScraper {
 	
 	/** 
 	 * Add the currentCount by max number of items per page
-	 * return true if another page should exists
-	 * return false if no more pages
 	 * @author Linus
+	 * @return Boolean of should there be another page
 	 */
 	public boolean nextPage() {
 		currentCount += pageMax;
@@ -192,9 +191,10 @@ public class WebScraper {
 	 */
 	
 	/** 
-	 * Just an helper function to help instantiating an empty list in the correct list type
-	 * Which by default is Vector
+	 * Just an helper function to help instantiating an empty list in the correct list type,
+	 * which by default is Vector
 	 * @author Linus
+	 * @return Empty List of Item objects
 	 */
 	public List<Item> getEmptyList() {
 		return new Vector<Item>();

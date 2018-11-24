@@ -55,11 +55,11 @@ public class Item implements Comparable<Item>{ //edited by tony for sorting
 	}
 	//end of tony
 	
-	/* method setPostedDate
-	 * method processPostedDate
-	 * method getPostedDate
+	/**
+	 * Set posted date of item
 	 * @author Linus
-	 * Functions for setting posted date and getting posted date
+	 * @param date - posted date in string
+	 * @param format - posted date format
 	 */
 	public void setPostedDate(String date, String format) {
 		SimpleDateFormat parseString = new SimpleDateFormat(format, Locale.ENGLISH);
@@ -70,6 +70,12 @@ public class Item implements Comparable<Item>{ //edited by tony for sorting
 		}
 		this.postedDateString = this.processPostedDate(DEFAULT_DATE_FORMAT);
 	}
+	/**
+	 * Generate processed posted date in string
+	 * @author Linus
+	 * @param format - returned posted date format
+	 * @return Posted date in the format specified, N/A if it fails to format
+	 */
 	private String processPostedDate(String format) {
 		SimpleDateFormat parseDate = new SimpleDateFormat(format, Locale.ENGLISH);
 		try {
@@ -79,6 +85,11 @@ public class Item implements Comparable<Item>{ //edited by tony for sorting
 			return "N/A";
 		}
 	}
+	/**
+	 * Get posted date of item
+	 * @author Linus
+	 * @return Posted date in format yyyy-MM-dd
+	 */
 	public String getPostedDate() {
 		return this.postedDateString;
 	}
