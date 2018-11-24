@@ -183,7 +183,7 @@ public class Controller {
      * into "searchRecord" list successfully
      * 5. The method set 'last search' button enable if there are at least two items(current and last) in search record
      * 6. The method make the button Refine enabled after a new search ( e.g. Go button is clicked).
-     * @author Felix
+     * @author Felix, Linus, Tony
      * 
      */
     @FXML
@@ -527,7 +527,7 @@ public class Controller {
     
     /**
      * Start searching and store the results into table and console
-     * @author Felix
+     * @author Felix, Linus, Tony
      * @param lastSearchKeyword - keyword to be searched
      */
     private void searchAndTabularization(String lastSearchKeyword){
@@ -630,7 +630,7 @@ public class Controller {
     }
 	/**
 	 * get the average price
-	 * @author tony
+	 * @author Tony
 	 * @param result - which is the List<Item> result from scrape function
 	 */
     double getAvgPrice(List<Item> result) { //get the average price
