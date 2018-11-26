@@ -129,6 +129,14 @@ public class WebScraper {
 		return true;
 	}
 	
+	/**
+	 * Get current domain
+	 * @author Linus
+	 * @return current domain
+	 */
+	public String getDomain() {
+		return currentDomain;
+	}
 	
 	/** 
 	 * Fetch the number of result of the keyword based on current domain
