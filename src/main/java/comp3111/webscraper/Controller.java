@@ -148,16 +148,7 @@ public class Controller {
     	}
     }
     
-    
-    public List<Item> RunSearch(String keyword) {
-    	this.textFieldKeyword.setText(keyword);
-    	this.actionSearch();
-    	return this.result;
-    }
-    
-    
-    
-    
+
     
     /**
      * Default controller
@@ -740,4 +731,69 @@ public class Controller {
 //    }
     //end of tony
     
+    
+    // Functions for testing
+    /**
+     * function for testing actionSearch
+     * @author Linus
+     * @param keyword - which is the keyword to be tested
+     * @return list of result scraped
+     */
+    public List<Item> runSearch(String keyword) {
+    	this.textFieldKeyword.setText(keyword);
+    	this.actionSearch();
+    	return this.result;
+    }
+    /**
+     * function for testing setLastSearchEnable() and setLastSearchDisable()
+     * @author Linus
+     * @return is last search enabled
+     */
+    public boolean getLastSearchEnabled() {
+    	return !LastSearchFXId.isDisable();
+    }
+    /**
+     * function for testing calling of browser, can only test logic but not UI component
+     * @param url
+     * @return true if the application doesn't crash
+     */
+    public boolean runCallBrowser(String url) {
+    	this.callBrowser(url);
+    	return true;
+    }
+    
+    /**
+     *  For testing actionClose()
+     */ 
+    public void runActionClose() {
+    	actionClose();
+    }
+    
+    public Node getAnotherRoot() {
+    	return anotherRoot;
+    }
+    public Button getRefineButton() {
+    	return refineButton;
+    }
+    public MenuItem getLastSearchButton() {
+    	return LastSearchFXId;
+    }
+    public ArrayList<String> getSearchRecord() {
+    	return searchRecord;
+    }
+    public String getCurrentKeyword() {
+    	return currentKeyword;
+    }
+    public Stage getAnotherStage() {
+    	return anotherStage;
+    }
+    public TableView getTableViewTable() {
+    	return tableViewTable;
+    }
+    public TextArea getTextAreaConsole() {
+    	return textAreaConsole;
+    }
+    public TextField getTextFieldKeyword() {
+    	return textFieldKeyword;
+    }
 }

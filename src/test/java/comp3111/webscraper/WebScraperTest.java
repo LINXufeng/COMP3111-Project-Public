@@ -55,6 +55,13 @@ public class WebScraperTest {
 		int i = w.fetchResultCount("note 9");
 		assertTrue(i != 0);
 	}
+	@Test
+	public void testFetchResultCountUnsupported() {
+		w.setDomain("giving.ust.hk");
+		int i = w.fetchResultCount("note 9");
+		assertTrue(i == -1);
+	}
+	
 	
 	@Test
 	public void testNextPageNoResult() {
