@@ -80,5 +80,15 @@ public class ItemTest {
 		assertEquals(c.compareTo(d),1);
 		
 	}
+	@Test
+	public void testCompareDate() {
+		Item a = new Item();
+		Item b = new Item();
+		a.setPostedDate("2018-01-01 00:00", "yyyy-MM-dd hh:mm");
+		b.setPostedDate("2018-01-02 00:00", "yyyy-MM-dd hh:mm");
+		assertEquals(a.compareDate(a),0);
+		assertEquals(a.compareDate(b),-1);
+		assertEquals(b.compareDate(a),1);
+	}
 
 }

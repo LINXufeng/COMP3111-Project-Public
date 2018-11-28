@@ -145,5 +145,18 @@ public class Item implements Comparable<Item>{ //edited by tony for sorting
 		else
 			return new Double(this.price).compareTo(new Double(item.getPrice()));
     }  
+	/**
+	 * Compare the Date of the items
+	 * @param item
+	 * @return 0 if the items are posted on the same date, 1 if the current item is posted earlier, -1 if the current item is posted later 
+	 */
+	public int compareDate(Item item) {
+//		private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
+		if(this.postedDate.getDay() > item.postedDate.getDay())
+			return 1;
+		else if (this.postedDate.getDate() < item.postedDate.getDate())
+			return -1;
+		else return 0;
+	}
 	//end of tony
 }

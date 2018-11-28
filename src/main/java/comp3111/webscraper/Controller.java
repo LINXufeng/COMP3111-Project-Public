@@ -302,7 +302,12 @@ public class Controller {
     	scraper = null;
         System.exit(0);
     }
-    
+    /**
+     *  For testing actionQuit()
+     */ 
+    public void runActionQuit() {
+    	this.actionQuit();
+    }
     
     
     
@@ -335,9 +340,16 @@ public class Controller {
     	result = scraper.getEmptyList();
     	task1(labelCount,labelPrice,labelMin,labelLatest,result);
     	// close about our team window
-    	anotherStage.close();
+    	if(anotherStage.isShowing()==true) {
+    		anotherStage.close();
+    	}
     }
-    
+    /**
+     *  For testing actionClose()
+     */ 
+    public void runActionClose() {
+    	this.actionClose();
+    }
     
     
     
@@ -660,7 +672,7 @@ public class Controller {
     Item getLatest(List<Item> result) { //get the latest item
     	Item latest = result.get(0);
     	for(Item item : result) {
-    		if((item.getPostedDate().compareTo(latest.getPostedDate())>0))
+    		if(latest.compareDate(item)<0)
     			latest = item;
     	}
     	return latest;
@@ -760,4 +772,34 @@ public class Controller {
     	this.callBrowser(url);
     	return true;
     } 
+    public Node getAnotherRoot() {
+    	return anotherRoot;
+    }
+    public Button getRefineButton() {
+    	return refineButton;
+    }
+    public MenuItem getLastSearchButton() {
+    	return LastSearchFXId;
+    }
+    public ArrayList<String> getSearchRecord() {
+    	return searchRecord;
+    }
+    public String getCurrentKeyword() {
+    	return currentKeyword;
+    }
+    public Stage getAnotherStage() {
+    	return anotherStage;
+    }
+    public TextField getTextFieldKeyword() {
+    	return textFieldKeyword;
+    }
+    public TextArea getTextAreaConsole() {
+    	return textAreaConsole;
+    }
+    public TableView getTableViewTable() {
+    	return tableViewTable;
+    }
+    public WebScraper getScraper() {
+    	return scraper;
+    }
 }

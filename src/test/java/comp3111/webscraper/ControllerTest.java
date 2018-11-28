@@ -53,4 +53,47 @@ public class ControllerTest extends ApplicationTest {
 	public void testCallBrowser() {
 		assertTrue(c.runCallBrowser("https://giving.ust.hk"));
 	}
+	@Test
+	public void testRunSearchNoResult() {
+		assertEquals(new Vector<Item>(), c.runSearch("SomethingThatIsDefinitelyNotGoingToShowAnyResultWhenQueryingCraigslistAsNoOneIsGoingToGiveTheirProductThisName"));
+	}
+	
+	
+	
+	
+	@Test
+	public void testActionClose() {
+		c.runActionClose();
+		System.out.println("testActionClose()");
+    	// close team information GUI
+		assertEquals(null,c.getAnotherRoot());
+    	// set refine button and last search button disable
+		assertEquals(true,c.getRefineButton().isDisable());
+    	assertEquals(true,c.getLastSearchButton().isDisable());
+    	// clear searchRecord
+    	assertEquals(new ArrayList<String>(),c.getSearchRecord());  	
+    	// clear current keyword
+    	assertEquals(null,c.getCurrentKeyword());
+    	// clear input text and result console to null
+    	assertEquals("",c.getTextFieldKeyword().getText());
+    	assertEquals("",c.getTextAreaConsole().getText());
+    	assertEquals(null,c.getTableViewTable().getItems());
+    	// close about our team window
+    	assertEquals(false,c.getAnotherStage().isShowing());
+	}
+	
+	
+	
+	
+	@Test
+	public void testActionAOT() {
+		System.out.println("testActionAOT()");
+		//assertEquals("About Our Team",c.getAnotherStage().getTitle());
+	    //anotherStage.setScene(new Scene(anotherRoot, 600, 329));
+		//assertEquals(new Scene((Parent) c.getAnotherRoot(), 600, 329),c.getAnotherStage().getScene());	
+	    //anotherStage.show();
+		//assertEquals(true,c.getAnotherStage().isShowing());
+    }
+	
+	
 }
