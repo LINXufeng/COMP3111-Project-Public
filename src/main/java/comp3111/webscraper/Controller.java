@@ -621,6 +621,7 @@ public class Controller {
 	 * get the number of data fetched
 	 * @author tony
 	 * @param result - which is the List<Item> result from scrape function
+	 * @return int
 	 */
     int getNumOfData(List<Item> result) { //get the number of data fetched
     	int num_of_data = 0;
@@ -632,6 +633,7 @@ public class Controller {
 	 * get the average price
 	 * @author Tony
 	 * @param result - which is the List<Item> result from scrape function
+	 * @return double
 	 */
     double getAvgPrice(List<Item> result) { //get the average price
     	double sum = 0;
@@ -644,6 +646,7 @@ public class Controller {
 	 * get the item that is the minimun price
 	 * @author tony
 	 * @param result - which is the List<Item> result from scrape function
+	 * @return Item
 	 */
     Item getMinItem(List<Item> result) { //get the item that is the minimum price
     	Item min = result.get(0);
@@ -657,6 +660,7 @@ public class Controller {
 	 * get the latest item
 	 * @author tony
 	 * @param result - which is the List<Item> result from scrape function
+	 * @return Item
 	 */
     Item getLatest(List<Item> result) { //get the latest item
     	Item latest = result.get(0);
@@ -674,6 +678,7 @@ public class Controller {
 	 * @param labePrice - the Average Selling Price
 	 * @param labelMin - the Lowest Selling Price
 	 * @param labelLatest - the Latest Post
+	 * @return void
 	 */
     void task1(Label labelCount,Label labelPrice,Hyperlink labelMin,Hyperlink labelLatest, List<Item> result) {
     	//task 1 implementation
@@ -709,7 +714,7 @@ public class Controller {
 	 * exclude the zero price item
 	 * @author tony
 	 * @param result - which is the List<Item> result from scrape function
-	 * @return return a new list without zero price item
+	 * @return Vector<Item> ,return a new list without zero price item
 	 */  
     Vector<Item> toNoZeroPrice(List<Item> result){ //exclude the zero price item
     	if(result == null)

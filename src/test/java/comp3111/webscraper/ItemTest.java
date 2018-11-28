@@ -43,4 +43,42 @@ public class ItemTest {
 		i.setPortal("Craigslist");
 		assertEquals(i.getPortal(), "Craigslist");
 	}
+	@Test
+	public void testGetTitle() {
+		Item i = new Item();
+		i.setTitle("Test");
+		assertEquals(i.getTitle(), "Test");
+	}
+	@Test
+	public void testGetPrice() {
+		Item i = new Item();
+		i.setPrice(100);
+		assertEquals(i.getPrice(), 100, 0.000001);
+	}
+	@Test
+	public void testGetUrl() {
+		Item i = new Item();
+		i.setUrl("https://www.google.com.hk/");
+		assertEquals(i.getUrl(), "https://www.google.com.hk/");
+	}
+	@Test
+	public void testGetPortal() {
+		Item i = new Item();
+		i.setPortal("DCFever");
+		assertEquals(i.getPortal(), "DCFever");
+	}
+	@Test
+	public void testCompareTo() {
+		Item c = new Item();
+		Item d = new Item();
+		c.setPortal("Craigslist");
+		c.setPrice(100);
+		d.setPortal("DCFever");
+		d.setPrice(100);
+		assertEquals(c.compareTo(d),-1);
+		c.setPrice(200);
+		assertEquals(c.compareTo(d),1);
+		
+	}
+
 }
