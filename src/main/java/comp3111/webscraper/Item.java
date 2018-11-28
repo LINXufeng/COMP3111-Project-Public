@@ -26,29 +26,58 @@ public class Item implements Comparable<Item>{ //edited by tony for sorting
 	/*
 	 * End of variables for parsing posted date
 	 */
-	
+	/**
+	 * get the title of the item
+	 * @return String
+	 * @author tonychan
+	 */
 	public String getTitle() {
 		return title;
 	}
+	/**
+	 * set the title of the item
+	 * @param title
+	 * @author tonychan
+	 */
 	public void setTitle(String title) {
 		this.title = title;
 	}
+	/**
+	 * get the price of the item
+	 * @return double
+	 * @author tonychan
+	 */
 	public double getPrice() {
 		return price;
 	}
+	/**
+	 * set the price of the item
+	 * @param price
+	 * @author tonychan
+	 */
 	public void setPrice(double price) {
 		this.price = price;
 	}
+	/**
+	 * get the URL of the item
+	 * @return String
+	 * @author tonychan
+	 */
 	public String getUrl() {
 		return url;
 	}
+	/**
+	 * set the URL of the item
+	 * @param url
+	 * @author tonychan
+	 */
 	public void setUrl(String url) {
 		this.url = url;
 	}
 	/**
 	 * get the portal
 	 * @author Tony
-	 * @return return the portal
+	 * @return String
 	 */
 	public String getPortal() {
 		return portal;
