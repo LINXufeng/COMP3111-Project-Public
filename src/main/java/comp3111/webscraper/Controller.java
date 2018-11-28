@@ -149,8 +149,11 @@ public class Controller {
     }
     
     
-    
-   
+    public List<Item> RunSearch(String keyword) {
+    	this.textFieldKeyword.setText(keyword);
+    	this.actionSearch();
+    	return this.result;
+    }
     
     
     

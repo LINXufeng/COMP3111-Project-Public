@@ -112,12 +112,11 @@ public class WebScraper {
 	 * @return return whether the domain is supported
 	 */
 	public boolean setDomain(String domain) {
+		currentDomain = domain;
 		if (domain == "Craigslist") {
-			currentDomain = domain;
 			pageMax = DEFAULT_PAGE_MAX;
 			dateFormat = DEFAULT_DATE_FORMAT;
 		} else if (domain == "DCFever") {
-			currentDomain = domain;
 			pageMax = 30;
 			dateFormat = "dd/MM hh:mm yyyy";
 		} else {

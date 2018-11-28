@@ -21,9 +21,8 @@ public class WebScraperTest {
 	}
 	@Test
 	public void testSetDomainUnsupported() {
-		String s = w.getDomain();
 		w.setDomain("giving.ust.hk");
-		assertEquals(s, w.getDomain());
+		assertEquals("giving.ust.hk", w.getDomain());
 	}
 	
 	@Test
@@ -108,6 +107,13 @@ public class WebScraperTest {
 //		assertTrue(l.size() == 30);
 		assertEquals(l.size(),30);
 	}
+	@Test
+	public void testScrapeUnsupported() {
+		w.setDomain("giving.ust.hk");
+		List l = w.scrape("note 9");
+		assertEquals(l, null);
+	}
+	
 	@Test
 	public void testScrapeHasNoResult() {
 		w.setDomain("Craigslist");
