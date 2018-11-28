@@ -645,10 +645,10 @@ public class Controller {
 	 */
     Item getMinItem(List<Item> result) { //get the item that is the minimum price
     	Item min = result.get(0);
-    	for(Item item : result) {
-    		if(item.getPrice() < min.getPrice())
-    			min = item;
-    	}
+//    	for(Item item : result) {
+//    		if(item.getPrice() < min.getPrice())
+//    			min = item;
+//    	}
     	return min;
     }
 	/**
@@ -687,7 +687,7 @@ public class Controller {
     		labelLatest.setDisable(true);
     	}
     	else {
-    		labelLatest.setDisable(false);
+    		labelMin.setDisable(false);
     		labelLatest.setDisable(false);
 //    		System.out.println("inside task1 else"); //debug
 	    	labelCount.setText(String.valueOf(getNumOfData(result)));
