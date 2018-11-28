@@ -324,4 +324,23 @@ public class WebScraper {
 		}
 		return null;
 	}
+	
+	/**
+	 * Helper function for testing
+	 * Change the pageCount variable
+	 * @author tony
+	 * @param i integer
+	 */
+	public void setPageCount(int i) {
+		pageCount = i;
+	}
+	/**
+	 * Helper function for testing
+	 * get the pageCount
+	 * @author tonychan
+	 * @return pageCount
+	 */
+	public int getPageCount() {
+		return this.pageCount;
+	}
 }
