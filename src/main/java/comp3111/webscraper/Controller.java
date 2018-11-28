@@ -624,7 +624,7 @@ public class Controller {
 	 * get the number of data fetched
 	 * @author tony
 	 * @param result - which is the List<Item> result from scrape function
-	 * @return int
+	 * @return the number of data fetched
 	 */
     int getNumOfData(List<Item> result) { //get the number of data fetched
     	int num_of_data = 0;
@@ -636,7 +636,7 @@ public class Controller {
 	 * get the average price
 	 * @author Tony
 	 * @param result - which is the List<Item> result from scrape function
-	 * @return double
+	 * @return the average price of the items
 	 */
     double getAvgPrice(List<Item> result) { //get the average price
     	double sum = 0;
@@ -646,10 +646,10 @@ public class Controller {
     	return sum/getNumOfData(result);
     }
 	/**
-	 * get the item that is the minimun price
+	 * get the item that is the minimum price
 	 * @author tony
 	 * @param result - which is the List<Item> result from scrape function
-	 * @return Item
+	 * @return the item that is the minimum price
 	 */
     Item getMinItem(List<Item> result) { //get the item that is the minimum price
     	Item min = result.get(0);
@@ -663,7 +663,7 @@ public class Controller {
 	 * get the latest item
 	 * @author tony
 	 * @param result - which is the List<Item> result from scrape function
-	 * @return Item
+	 * @return a list of items
 	 */
     Item getLatest(List<Item> result) { //get the latest item
     	Item latest = result.get(0);

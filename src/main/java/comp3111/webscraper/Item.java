@@ -28,7 +28,7 @@ public class Item implements Comparable<Item>{ //edited by tony for sorting
 	 */
 	/**
 	 * get the title of the item
-	 * @return String
+	 * @return the title of the item
 	 * @author tonychan
 	 */
 	public String getTitle() {
@@ -44,7 +44,7 @@ public class Item implements Comparable<Item>{ //edited by tony for sorting
 	}
 	/**
 	 * get the price of the item
-	 * @return double
+	 * @return the price of the item
 	 * @author tonychan
 	 */
 	public double getPrice() {
@@ -60,7 +60,7 @@ public class Item implements Comparable<Item>{ //edited by tony for sorting
 	}
 	/**
 	 * get the URL of the item
-	 * @return String
+	 * @return the URL of the item
 	 * @author tonychan
 	 */
 	public String getUrl() {
@@ -75,9 +75,9 @@ public class Item implements Comparable<Item>{ //edited by tony for sorting
 		this.url = url;
 	}
 	/**
-	 * get the portal
+	 * get the portal of the item
 	 * @author Tony
-	 * @return String
+	 * @return the portal of the item
 	 */
 	public String getPortal() {
 		return portal;
