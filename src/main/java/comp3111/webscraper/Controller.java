@@ -302,7 +302,12 @@ public class Controller {
     	scraper = null;
         System.exit(0);
     }
-    
+    /**
+     *  For testing actionQuit()
+     */ 
+    public void runActionQuit() {
+    	this.actionQuit();
+    }
     
     
     
@@ -335,9 +340,16 @@ public class Controller {
     	result = scraper.getEmptyList();
     	task1(labelCount,labelPrice,labelMin,labelLatest,result);
     	// close about our team window
-    	anotherStage.close();
+    	if(anotherStage.isShowing()==true) {
+    		anotherStage.close();
+    	}
     }
-    
+    /**
+     *  For testing actionClose()
+     */ 
+    public void runActionClose() {
+    	this.actionClose();
+    }
     
     
     
