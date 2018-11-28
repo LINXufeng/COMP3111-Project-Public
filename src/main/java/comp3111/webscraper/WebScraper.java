@@ -141,6 +141,7 @@ public class WebScraper {
 	/** 
 	 * Fetch the number of result of the keyword based on current domain
 	 * @author Linus
+	 * @author tonychan
 	 * @param keyword - keyword to be searched
 	 * @return number of pages
 	 */
