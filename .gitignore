@@ -5,8 +5,4 @@ target/*
 bin
 bin/*
 /.gradle/
-<<<<<<< HEAD
 build/*
-=======
->>>>>>> fb361de25496ccb9be27d0fb97993e15fa951e10
-/build/
