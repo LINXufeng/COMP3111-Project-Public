@@ -10,7 +10,8 @@ public class Item implements Comparable<Item>{ //edited by tony for sorting
 	private String title ; 
 	private double price ;
 	private String url ;
-	/*
+	/**
+	 * which portal it comes from
 	 * @author Tony
 	 */
 	private String portal; //where does it come from
@@ -44,12 +45,19 @@ public class Item implements Comparable<Item>{ //edited by tony for sorting
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	/*
+	/**
+	 * get the portal
 	 * @author Tony
+	 * @return return the portal
 	 */
 	public String getPortal() {
 		return portal;
 	}
+	/**
+	 * set the portal
+	 * @author Tony
+	 * @param portal
+	 */
 	public void setPortal(String portal) {
 		this.portal = portal;
 	}
@@ -97,7 +105,11 @@ public class Item implements Comparable<Item>{ //edited by tony for sorting
 	 * End of functions for posted date
 	 */
 	//tony
-	@Override  
+	/**
+	 * Compare the items for sorting. The returned result is sorted by price. If two items have the same price, 
+	 * item sold on Craiglist go first. If two items from the same portal has the same price, they are sorted
+	 */
+	@Override 
     public int compareTo(Item item) {  
 		if(this.price == item.getPrice())
 			return (this.portal).compareTo(item.getPortal());
