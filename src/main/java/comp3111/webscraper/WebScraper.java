@@ -297,10 +297,11 @@ public class WebScraper {
 					HtmlElement date = (HtmlElement) dateTag.get(i);
 					
 					String itemPrice;
-					if(spanPrice == null) {
-						itemPrice = "0.0";
-					}
-					else if(spanPrice.asText().equals("--")) {
+//					if(spanPrice == null) {
+//						itemPrice = "0.0";
+//					}
+//					else 
+					if(spanPrice.asText().equals("--")) {
 						itemPrice = "0.0";
 					}
 					else itemPrice = spanPrice.asText();
