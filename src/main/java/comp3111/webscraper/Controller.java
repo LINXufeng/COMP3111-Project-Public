@@ -760,4 +760,34 @@ public class Controller {
     	this.callBrowser(url);
     	return true;
     } 
+    public Node getAnotherRoot() {
+    	return anotherRoot;
+    }
+    public Button getRefineButton() {
+    	return refineButton;
+    }
+    public MenuItem getLastSearchButton() {
+    	return LastSearchFXId;
+    }
+    public ArrayList<String> getSearchRecord() {
+    	return searchRecord;
+    }
+    public String getCurrentKeyword() {
+    	return currentKeyword;
+    }
+    public Stage getAnotherStage() {
+    	return anotherStage;
+    }
+    public TextField getTextFieldKeyword() {
+    	return textFieldKeyword;
+    }
+    public TextArea getTextAreaConsole() {
+    	return textAreaConsole;
+    }
+    public TableView getTableViewTable() {
+    	return tableViewTable;
+    }
+    public WebScraper getScraper() {
+    	return scraper;
+    }
 }
