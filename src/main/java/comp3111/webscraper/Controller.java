@@ -591,6 +591,7 @@ public class Controller {
 	    tableViewPostedDateCol.setCellValueFactory(new PropertyValueFactory("postedDate"));	  
 	    tableViewUrlCol.setCellValueFactory(new PropertyValueFactory<Item, String>("url"));
 	    // Assign the "Open Browser when clicked" function to URL cells
+
 	    Callback<TableColumn<Item, String>, TableCell<Item, String>> urlCellFactory = new Callback<TableColumn<Item, String>, TableCell<Item, String>>() {
 		    @Override
 		    public TableCell call(TableColumn p) {
@@ -711,8 +712,6 @@ public class Controller {
 	 * @return Vector<Item> ,return a new list without zero price item
 	 */  
     Vector<Item> toNoZeroPrice(List<Item> result){ //exclude the zero price item
-    	if(result == null)
-    		return null;
 		Vector<Item> newResult = new Vector<Item>();
     	for(Item item : result) {
     		if(item.getPrice()>0)
@@ -760,5 +759,5 @@ public class Controller {
     public boolean runCallBrowser(String url) {
     	this.callBrowser(url);
     	return true;
-    }
+    } 
 }
