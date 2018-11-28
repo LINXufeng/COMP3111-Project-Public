@@ -761,39 +761,4 @@ public class Controller {
     	this.callBrowser(url);
     	return true;
     }
-    
-    /**
-     *  For testing actionClose()
-     */ 
-    public void runActionClose() {
-    	actionClose();
-    }
-    
-    public Node getAnotherRoot() {
-    	return anotherRoot;
-    }
-    public Button getRefineButton() {
-    	return refineButton;
-    }
-    public MenuItem getLastSearchButton() {
-    	return LastSearchFXId;
-    }
-    public ArrayList<String> getSearchRecord() {
-    	return searchRecord;
-    }
-    public String getCurrentKeyword() {
-    	return currentKeyword;
-    }
-    public Stage getAnotherStage() {
-    	return anotherStage;
-    }
-    public TableView getTableViewTable() {
-    	return tableViewTable;
-    }
-    public TextArea getTextAreaConsole() {
-    	return textAreaConsole;
-    }
-    public TextField getTextFieldKeyword() {
-    	return textFieldKeyword;
-    }
 }
