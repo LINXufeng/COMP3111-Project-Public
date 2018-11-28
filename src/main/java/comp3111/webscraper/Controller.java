@@ -660,7 +660,7 @@ public class Controller {
     Item getLatest(List<Item> result) { //get the latest item
     	Item latest = result.get(0);
     	for(Item item : result) {
-    		if((item.getPostedDate().compareTo(latest.getPostedDate())>0))
+    		if(latest.compareDate(item)<0)
     			latest = item;
     	}
     	return latest;
