@@ -97,13 +97,36 @@ public class WebScraperTest {
 		w.setDomain("Craigslist");
 		List l = w.scrape("note 9");
 		// scrape return single page of result only, until nextPage() is called to switch page
-		assertTrue(l.size() == 120);
+		assertEquals(l.size(),120);
+//		assertTrue(l.size() == 120);
 	}
 	@Test
 	public void testScrapeDCFeverHasResult() {
 		w.setDomain("DCFever");
 		List l = w.scrape("note 9");
 		// scrape return single page of result only, until nextPage() is called to switch page
-		assertTrue(l.size() == 30);
+//		assertTrue(l.size() == 30);
+		assertEquals(l.size(),30);
+	}
+	@Test
+	public void testScrapeHasNoResult() {
+		w.setDomain("Craigslist");
+		w.setPageCount(-1);
+		List l = w.scrape("note 9");
+		assertEquals(l.size(),120);
+		w.setDomain("DCFever");
+		w.setPageCount(-1);
+		l = w.scrape("note 9");
+		assertEquals(l.size(),30);
+	}
+	@Test
+	public void testSetPageCount() {
+		w.setPageCount(10);
+		assertEquals(w.getPageCount(),10);
+	}
+	@Test
+	public void testGetPageCount() {
+		w.setPageCount(10);
+		assertEquals(w.getPageCount(),10);
 	}
 }
