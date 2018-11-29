@@ -765,7 +765,7 @@ public class Controller {
     }
     /**
      * function for testing calling of browser, can only test logic but not UI component
-     * @param url
+     * @param url -the URL of the item
      * @return true if the application doesn't crash
      */
     public boolean runCallBrowser(String url) {

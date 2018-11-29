@@ -36,7 +36,7 @@ public class Item implements Comparable<Item>{ //edited by tony for sorting
 	}
 	/**
 	 * set the title of the item
-	 * @param title
+	 * @param title -the title of the item
 	 * @author tonychan
 	 */
 	public void setTitle(String title) {
@@ -52,7 +52,7 @@ public class Item implements Comparable<Item>{ //edited by tony for sorting
 	}
 	/**
 	 * set the price of the item
-	 * @param price
+	 * @param price -the price of the item
 	 * @author tonychan
 	 */
 	public void setPrice(double price) {
@@ -68,7 +68,7 @@ public class Item implements Comparable<Item>{ //edited by tony for sorting
 	}
 	/**
 	 * set the URL of the item
-	 * @param url
+	 * @param url -the URL of the item
 	 * @author tonychan
 	 */
 	public void setUrl(String url) {
@@ -85,7 +85,7 @@ public class Item implements Comparable<Item>{ //edited by tony for sorting
 	/**
 	 * set the portal
 	 * @author Tony
-	 * @param portal
+	 * @param portal -the portal of the item
 	 */
 	public void setPortal(String portal) {
 		this.portal = portal;
@@ -147,7 +147,7 @@ public class Item implements Comparable<Item>{ //edited by tony for sorting
     }  
 	/**
 	 * Compare the Date of the items
-	 * @param item
+	 * @param item -the item to be compared
 	 * @return 0 if the items are posted on the same date, 1 if the current item is posted earlier, -1 if the current item is posted later 
 	 */
 	public int compareDate(Item item) {
