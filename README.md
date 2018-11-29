@@ -1,7 +1,7 @@
 # HKUST COMP3111 Software Engineering (Spring 2018)
-This is modified README for the felix branch
-
-This is attempt to make change to README
+CHAN Kwong Yin: Basic 1, 2
+LIN XuFeng: Basic 5, 6
+CHUNG King Tung: Basic 3, 4
 
 
 # COMP3111: Software Engineering Project - Webscrapper
