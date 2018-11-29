@@ -772,33 +772,83 @@ public class Controller {
     	this.callBrowser(url);
     	return true;
     } 
+    /**
+     * function for testing controller
+     * @author Felix
+     * @return return private UI variable anotherRoot
+     */
     public Node getAnotherRoot() {
     	return anotherRoot;
     }
+    /**
+     * function for testing controller
+     * @author Felix
+     * @return return private FX Button Node refineButton
+     */
     public Button getRefineButton() {
     	return refineButton;
     }
+    /**
+     * function for testing controller
+     * @author Felix
+     * @return return private FX MenuItem Node LastSearchFXId
+     */
     public MenuItem getLastSearchButton() {
     	return LastSearchFXId;
     }
+    /**
+     * function for testing controller
+     * @author Felix
+     * @return return private ArrayList<String> searchRecord
+     */
     public ArrayList<String> getSearchRecord() {
     	return searchRecord;
     }
+    /**
+     * function for testing controller
+     * @author Felix
+     * @return return private String variable currentKeyword
+     */
     public String getCurrentKeyword() {
     	return currentKeyword;
     }
+    /**
+     * function for testing controller
+     * @author Felix
+     * @return return private FX variable anotherStage
+     */
     public Stage getAnotherStage() {
     	return anotherStage;
     }
+    /**
+     * function for testing controller
+     * @author Felix
+     * @return return private FX component textFieldKeyword
+     */
     public TextField getTextFieldKeyword() {
     	return textFieldKeyword;
     }
+    /**
+     * function for testing controller
+     * @author Felix
+     * @return return private FX component textAreaConsole
+     */
     public TextArea getTextAreaConsole() {
     	return textAreaConsole;
     }
+    /**
+     * function for testing controller
+     * @author Felix
+     * @return return private FX component tableViewTable
+     */
     public TableView getTableViewTable() {
     	return tableViewTable;
     }
+    /**
+     * function for testing controller
+     * @author Felix
+     * @return return scraper
+     */
     public WebScraper getScraper() {
     	return scraper;
     }
