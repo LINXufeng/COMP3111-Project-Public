@@ -4,7 +4,7 @@
 |----|----|----|  
 | kychanbx | Basic 1 | Basic 2 |   
 | ktchung | Basic 3 | Basic 4 |  
-| xlinax | Basic 5 | Advanced 3 |
+| xlinax | Basic 5 | Basic 6 |
  
 
 * Assumption
