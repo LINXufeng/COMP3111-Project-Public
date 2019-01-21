@@ -1,6 +1,6 @@
 * Group name : #33-???
 
-|  Member | Task | Task |  
+|  Developer | Task | Task |  
 |----|----|----|  
 | kychanbx | Basic 1 | Basic 2 |   
 | ktchung | Basic 3 | Basic 4 |  
